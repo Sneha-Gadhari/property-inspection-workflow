@@ -2,7 +2,7 @@
 
 Containerized Property Inspection Workflow — a DevOps capstone project. Digitizes the property inspection process end-to-end: request submission → document/data validation → reviewer action → approval/rejection → status tracking.
 
-## Tech Stack
+## Tech Stack (Updated)
 - Java 21, Spring Boot 4.1.0
 - Maven (build tool)
 - Spring Data JPA + H2 (in-memory DB for local dev)
