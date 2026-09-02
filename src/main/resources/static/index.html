@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Inspection Workflow</title>
+    <style>
+        :root {
+            --navy: #2F5597;
+            --navy-dark: #1F3864;
+            --ink: #1A1A1A;
+            --muted: #6B7280;
+            --border: #E2E5EA;
+            --bg: #F7F8FA;
+            --card: #FFFFFF;
+            --green: #1B7F4D;
+            --green-bg: #E8F5EC;
+            --red: #B3261E;
+            --red-bg: #FCEBEA;
+            --amber: #92600D;
+            --amber-bg: #FBF0DC;
+            --gray-bg: #EEF0F3;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: var(--navy-dark);
+            color: white;
+            padding: 18px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.2px;
+        }
+        header .who {
+            font-size: 13px;
+            color: #C9D6EA;
+        }
+        header button {
+            background: transparent;
+            color: white;
+            border: 1px solid #4A6DA0;
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-size: 13px;
+            cursor: pointer;
+            width: auto;
+            margin-left: 14px;
+        }
+        header button:hover { background: #3D5C8F; }
+
+        main {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        .auth-wrap {
+            max-width: 420px;
+            margin: 60px auto;
+        }
+        .auth-wrap h1 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 28px;
+            color: var(--navy-dark);
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--muted);
+            margin: 0 0 16px;
+            font-weight: 600;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            margin-top: 12px;
+        }
+        label:first-of-type { margin-top: 0; }
+
+        input, select {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+            color: var(--ink);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--navy);
+        }
+
+        button.primary {
+            width: 100%;
+            margin-top: 18px;
+            padding: 10px;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button.primary:hover { background: var(--navy-dark); }
+
+        .tab-switch {
+            display: flex;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .tab-switch button {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--muted);
+            width: auto;
+        }
+        .tab-switch button.active {
+            background: var(--navy);
+            color: white;
+            font-weight: 600;
+        }
+
+        .msg {
+            font-size: 13px;
+            margin-top: 12px;
+            padding: 8px 10px;
+            border-radius: 5px;
+        }
+        .msg.error { background: var(--red-bg); color: var(--red); }
+        .msg.ok { background: var(--green-bg); color: var(--green); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--muted);
+            font-weight: 600;
+            padding: 8px 10px;
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        tr:last-child td { border-bottom: none; }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge.SUBMITTED { background: var(--gray-bg); color: var(--muted); }
+        .badge.UNDER_REVIEW { background: var(--amber-bg); color: var(--amber); }
+        .badge.APPROVED { background: var(--green-bg); color: var(--green); }
+        .badge.REJECTED { background: var(--red-bg); color: var(--red); }
+
+        .icon-btn {
+            width: auto;
+            display: inline-block;
+            padding: 5px 9px;
+            margin-right: 4px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .icon-btn.approve:hover { background: var(--green-bg); border-color: var(--green); }
+        .icon-btn.reject:hover { background: var(--red-bg); border-color: var(--red); }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding: 24px;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="authView" class="auth-wrap">
+    <h1>Property Inspection Workflow</h1>
+    <div class="card">
+        <div class="tab-switch">
+            <button id="loginTabBtn" class="active" onclick="showTab('login')">Log In</button>
+            <button id="registerTabBtn" onclick="showTab('register')">Register</button>
+        </div>
+
+        <div id="loginTab">
+            <label>Username</label>
+            <input id="loginUsername" placeholder="e.g. demo">
+            <label>Password</label>
+            <input id="loginPassword" type="password" placeholder="••••••••">
+            <button class="primary" onclick="login()">Log In</button>
+        </div>
+
+        <div id="registerTab" class="hidden">
+            <label>Username</label>
+            <input id="regUsername" placeholder="Choose a username">
+            <label>Password</label>
+            <input id="regPassword" type="password" placeholder="Choose a password">
+            <label>I am a...</label>
+            <select id="regRole">
+                <option value="INSPECTOR">Inspector</option>
+                <option value="REVIEWER">Reviewer</option>
+                <option value="PROPERTY_OWNER">Property Owner</option>
+            </select>
+            <button class="primary" onclick="register()">Register</button>
+        </div>
+
+        <div id="authMsg"></div>
+    </div>
+</div>
+
+<div id="appView" class="hidden">
+    <header>
+        <h1>Property Inspection Workflow</h1>
+        <div>
+            <span class="who">Signed in as <strong id="whoami"></strong> &middot; <span id="roleLabel"></span></span>
+            <button onclick="logout()">Log out</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="pendingCard" class="card hidden">
+            <h2>Pending User Approvals</h2>
+            <table id="pendingTbl"></table>
+        </div>
+
+        <div id="submitCard" class="card hidden">
+            <h2>Submit Inspection Request</h2>
+            <label>Property Address</label>
+            <input id="address" placeholder="e.g. 12 MG Road, Mumbai">
+            <button class="primary" onclick="submitRequest()">Submit Request</button>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h2 style="margin:0;">All Inspection Requests</h2>
+                <select id="statusFilter" onchange="loadRequests()" style="width:auto; padding:6px 10px; font-size:13px;">
+                    <option value="">All statuses</option>
+                    <option value="SUBMITTED">Submitted</option>
+                    <option value="UNDER_REVIEW">Under Review</option>
+                    <option value="APPROVED">Approved</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+            </div>
+            <table id="tbl"></table>
+        </div>
+    </main>
+</div>
+
+<script>
+    let currentUser = null;
+
+    function showTab(tab){
+        document.getElementById('loginTab').classList.toggle('hidden', tab !== 'login');
+        document.getElementById('registerTab').classList.toggle('hidden', tab !== 'register');
+        document.getElementById('loginTabBtn').classList.toggle('active', tab === 'login');
+        document.getElementById('registerTabBtn').classList.toggle('active', tab === 'register');
+        document.getElementById('authMsg').innerHTML = '';
+    }
+
+    function showMsg(text, type){
+        document.getElementById('authMsg').innerHTML = `<div class="msg ${type}">${text}</div>`;
+    }
+
+    async function register(){
+        const username = document.getElementById('regUsername').value;
+        const password = document.getElementById('regPassword').value;
+        const role = document.getElementById('regRole').value;
+        const res = await fetch('/api/users/register', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password, role})
+        });
+        if(res.ok){
+            showMsg('Registered! An admin needs to approve your account before you can log in.', 'ok');
+            showTab('login');
+        } else {
+            showMsg('Registration failed \u2014 that username may already be taken.', 'error');
+        }
+    }
+
+    async function login(){
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const res = await fetch('/api/users/login', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password})
+        });
+        if(!res.ok){ showMsg('Incorrect username or password.', 'error'); return; }
+        const user = await res.json();
+        if(!user.approved){ showMsg('Your account is registered but not yet approved by an admin.', 'error'); return; }
+
+        currentUser = user;
+        document.getElementById('authView').classList.add('hidden');
+        document.getElementById('appView').classList.remove('hidden');
+        document.getElementById('whoami').textContent = user.username;
+        document.getElementById('roleLabel').textContent = user.role.replace('_',' ');
+
+        document.getElementById('pendingCard').classList.toggle('hidden', user.role !== 'ADMIN');
+        document.getElementById('submitCard').classList.toggle('hidden', user.role !== 'INSPECTOR');
+
+        if(user.role === 'ADMIN') loadPending();
+        loadRequests();
+    }
+
+    function logout(){
+        currentUser = null;
+        document.getElementById('appView').classList.add('hidden');
+        document.getElementById('authView').classList.remove('hidden');
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+        showMsg('', '');
+    }
+
+    async function loadPending(){
+        const res = await fetch('/api/users/pending');
+        const data = await res.json();
+        const tbl = document.getElementById('pendingTbl');
+        if(data.length === 0){
+            tbl.innerHTML = '<tr><td class="empty">No pending approvals right now.</td></tr>';
+            return;
+        }
+        let rows = '<tr><th>Username</th><th>Requested Role</th><th></th></tr>';
+        data.forEach(u => {
+            rows += `<tr><td>${u.username}</td><td>${u.role.replace('_',' ')}</td>
+      <td><button class="icon-btn approve" onclick="approveUser(${u.id})">Approve</button></td></tr>`;
+        });
+        tbl.innerHTML = rows;
+    }
+
+    async function approveUser(id){
+        await fetch(`/api/users/${id}/approve`, {method: 'PUT'});
+        loadPending();
+    }
+
+    async function loadRequests(){
+        const filter = document.getElementById('statusFilter').value;
+        const url = filter ? `/api/inspections/status/${filter}` : '/api/inspections';
+        const res = await fetch(url);
+        const data = await res.json();
+        const tbl = document.getElementById('tbl');
+        const canReview = currentUser && (currentUser.role === 'REVIEWER' || currentUser.role === 'ADMIN');
+
+        if(data.length === 0){
+            tbl.innerHTML = '<tr><td class="empty">No inspection requests match this filter.</td></tr>';
+            return;
+        }
+
+        let rows = `<tr><th>ID</th><th>Address</th><th>Inspector</th><th>Status</th>${canReview ? '<th></th>' : ''}</tr>`;
+        data.forEach(r => {
+            let actions = '';
+            if(canReview){
+                if(r.status === 'SUBMITTED'){
+                    actions = `<td><button class="icon-btn" onclick="act(${r.id},'start-review')">Start Review</button></td>`;
+                } else if(r.status === 'UNDER_REVIEW'){
+                    actions = `<td>
+          <button class="icon-btn approve" onclick="act(${r.id},'approve')">Approve</button>
+          <button class="icon-btn reject" onclick="act(${r.id},'reject')">Reject</button>
+        </td>`;
+                } else {
+                    actions = '<td></td>';
+                }
+            }
+            rows += `<tr>
+      <td>${r.id}</td>
+      <td>${r.propertyAddress}</td>
+      <td>${r.inspectorName}</td>
+      <td><span class="badge ${r.status}">${r.status.replace('_',' ')}</span></td>
+      ${actions}
+    </tr>`;
+        });
+        tbl.innerHTML = rows;
+    }
+
+    async function act(id, action){
+        await fetch(`/api/inspections/${id}/${action}`, {method: 'PUT'});
+        loadRequests();
+    }
+
+    async function submitRequest(){
+        const address = document.getElementById('address').value;
+        if(!address) return;
+        await fetch('/api/inspections', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({propertyAddress: address, inspectorName: currentUser.username})
+        });
+        document.getElementById('address').value = '';
+        loadRequests();
+    }
+</script>
+</body>
+</html>

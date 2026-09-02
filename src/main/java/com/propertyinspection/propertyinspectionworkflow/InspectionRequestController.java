@@ -37,4 +37,24 @@ public class InspectionRequestController {
                 .filter(r -> r.getStatus() == status)
                 .toList();
     }
+    @PutMapping("/{id}/approve")
+    public InspectionRequest approve(@PathVariable Long id) {
+        InspectionRequest r = repository.findById(id).orElseThrow();
+        r.setStatus(InspectionRequest.Status.APPROVED);
+        return repository.save(r);
+    }
+
+    @PutMapping("/{id}/reject")
+    public InspectionRequest reject(@PathVariable Long id) {
+        InspectionRequest r = repository.findById(id).orElseThrow();
+        r.setStatus(InspectionRequest.Status.REJECTED);
+        return repository.save(r);
+    }
+
+    @PutMapping("/{id}/start-review")
+    public InspectionRequest startReview(@PathVariable Long id) {
+        InspectionRequest r = repository.findById(id).orElseThrow();
+        r.setStatus(InspectionRequest.Status.UNDER_REVIEW);
+        return repository.save(r);
+    }
 }
