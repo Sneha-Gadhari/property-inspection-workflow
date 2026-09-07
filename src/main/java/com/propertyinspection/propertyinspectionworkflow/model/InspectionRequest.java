@@ -16,6 +16,10 @@ public class InspectionRequest {
     @NotBlank(message = "Inspector name is required")
     private String inspectorName;
 
+    private String propertyType;
+    private String contactNumber;
+    private String notes;
+    private String reviewerRemarks;
     private String documentPath;
 
     @Enumerated(EnumType.STRING)
@@ -25,7 +29,6 @@ public class InspectionRequest {
         SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED
     }
 
-    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -34,6 +37,18 @@ public class InspectionRequest {
 
     public String getInspectorName() { return inspectorName; }
     public void setInspectorName(String inspectorName) { this.inspectorName = inspectorName; }
+
+    public String getPropertyType() { return propertyType; }
+    public void setPropertyType(String propertyType) { this.propertyType = propertyType; }
+
+    public String getContactNumber() { return contactNumber; }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+
+    public String getReviewerRemarks() { return reviewerRemarks; }
+    public void setReviewerRemarks(String reviewerRemarks) { this.reviewerRemarks = reviewerRemarks; }
 
     public String getDocumentPath() { return documentPath; }
     public void setDocumentPath(String documentPath) { this.documentPath = documentPath; }

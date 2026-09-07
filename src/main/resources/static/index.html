@@ -217,6 +217,68 @@
         }
 
         .hidden { display: none !important; }
+
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            flex: 1;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        .stat-box .num { font-size: 22px; font-weight: 700; color: var(--navy-dark); }
+        .stat-box .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .checkbox-row input { width: auto; margin: 0; }
+
+        textarea {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+            color: var(--ink);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+        }
+        textarea:focus { outline: none; border-color: var(--navy); }
+
+        .remarks-note {
+            font-size: 12px;
+            color: var(--muted);
+            font-style: italic;
+            margin-top: 3px;
+        }
+
+        .role-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: var(--gray-bg);
+            color: var(--muted);
+        }
+        .role-tag.ADMIN { background: #EAE3F8; color: #5B3AA8; }
+        .role-tag.REVIEWER { background: var(--amber-bg); color: var(--amber); }
+        .role-tag.INSPECTOR { background: var(--green-bg); color: var(--green); }
+        .role-tag.PROPERTY_OWNER { background: #DDEEF7; color: #1A6690; }
     </style>
 </head>
 <body>
@@ -265,6 +327,18 @@
     </header>
 
     <main>
+        <div id="statsRow" class="stats-row hidden">
+            <div class="stat-box"><div class="num" id="statSubmitted">0</div><div class="lbl">Submitted</div></div>
+            <div class="stat-box"><div class="num" id="statUnderReview">0</div><div class="lbl">Under Review</div></div>
+            <div class="stat-box"><div class="num" id="statApproved">0</div><div class="lbl">Approved</div></div>
+            <div class="stat-box"><div class="num" id="statRejected">0</div><div class="lbl">Rejected</div></div>
+        </div>
+
+        <div id="usersCard" class="card hidden">
+            <h2>All Users</h2>
+            <table id="usersTbl"></table>
+        </div>
+
         <div id="pendingCard" class="card hidden">
             <h2>Pending User Approvals</h2>
             <table id="pendingTbl"></table>
@@ -274,19 +348,36 @@
             <h2>Submit Inspection Request</h2>
             <label>Property Address</label>
             <input id="address" placeholder="e.g. 12 MG Road, Mumbai">
+            <label>Property Type</label>
+            <select id="propertyType">
+                <option value="Residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Industrial">Industrial</option>
+                <option value="Land / Plot">Land / Plot</option>
+            </select>
+            <label>Contact Number</label>
+            <input id="contactNumber" placeholder="e.g. 98765 43210">
+            <label>Notes (optional)</label>
+            <textarea id="notes" placeholder="Anything the reviewer should know before inspecting..."></textarea>
             <button class="primary" onclick="submitRequest()">Submit Request</button>
         </div>
 
         <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                 <h2 style="margin:0;">All Inspection Requests</h2>
-                <select id="statusFilter" onchange="loadRequests()" style="width:auto; padding:6px 10px; font-size:13px;">
-                    <option value="">All statuses</option>
-                    <option value="SUBMITTED">Submitted</option>
-                    <option value="UNDER_REVIEW">Under Review</option>
-                    <option value="APPROVED">Approved</option>
-                    <option value="REJECTED">Rejected</option>
-                </select>
+                <div style="display:flex; align-items:center; gap:14px;">
+                    <label class="checkbox-row" id="onlyMineWrap">
+                        <input type="checkbox" id="onlyMine" onchange="loadRequests()">
+                        Only show mine
+                    </label>
+                    <select id="statusFilter" onchange="loadRequests()" style="width:auto; padding:6px 10px; font-size:13px;">
+                        <option value="">All statuses</option>
+                        <option value="SUBMITTED">Submitted</option>
+                        <option value="UNDER_REVIEW">Under Review</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="REJECTED">Rejected</option>
+                    </select>
+                </div>
             </div>
             <table id="tbl"></table>
         </div>
@@ -341,10 +432,17 @@
         document.getElementById('whoami').textContent = user.username;
         document.getElementById('roleLabel').textContent = user.role.replace('_',' ');
 
-        document.getElementById('pendingCard').classList.toggle('hidden', user.role !== 'ADMIN');
-        document.getElementById('submitCard').classList.toggle('hidden', user.role !== 'INSPECTOR');
+        const isAdmin = user.role === 'ADMIN';
+        const canSubmit = user.role === 'INSPECTOR' || user.role === 'PROPERTY_OWNER';
 
-        if(user.role === 'ADMIN') loadPending();
+        document.getElementById('pendingCard').classList.toggle('hidden', !isAdmin);
+        document.getElementById('usersCard').classList.toggle('hidden', !isAdmin);
+        document.getElementById('submitCard').classList.toggle('hidden', !canSubmit);
+        document.getElementById('statsRow').classList.toggle('hidden', !isAdmin);
+        document.getElementById('onlyMineWrap').classList.toggle('hidden', !canSubmit);
+        document.getElementById('onlyMineWrap').style.display = canSubmit ? 'flex' : 'none';
+
+        if(isAdmin){ loadPending(); loadUsers(); }
         loadRequests();
     }
 
@@ -355,6 +453,18 @@
         document.getElementById('loginUsername').value = '';
         document.getElementById('loginPassword').value = '';
         showMsg('', '');
+    }
+
+    async function loadUsers(){
+        const res = await fetch('/api/users');
+        const data = await res.json();
+        const tbl = document.getElementById('usersTbl');
+        let rows = '<tr><th>Username</th><th>Role</th><th>Status</th></tr>';
+        data.forEach(u => {
+            rows += `<tr><td>${u.username}</td><td><span class="role-tag ${u.role}">${u.role.replace('_',' ')}</span></td>
+      <td>${u.approved ? '<span class="badge APPROVED">Approved</span>' : '<span class="badge SUBMITTED">Pending</span>'}</td></tr>`;
+        });
+        tbl.innerHTML = rows;
     }
 
     async function loadPending(){
@@ -376,13 +486,31 @@
     async function approveUser(id){
         await fetch(`/api/users/${id}/approve`, {method: 'PUT'});
         loadPending();
+        loadUsers();
+    }
+
+    function updateStats(data){
+        const counts = {SUBMITTED:0, UNDER_REVIEW:0, APPROVED:0, REJECTED:0};
+        data.forEach(r => { if(counts[r.status] !== undefined) counts[r.status]++; });
+        document.getElementById('statSubmitted').textContent = counts.SUBMITTED;
+        document.getElementById('statUnderReview').textContent = counts.UNDER_REVIEW;
+        document.getElementById('statApproved').textContent = counts.APPROVED;
+        document.getElementById('statRejected').textContent = counts.REJECTED;
     }
 
     async function loadRequests(){
         const filter = document.getElementById('statusFilter').value;
         const url = filter ? `/api/inspections/status/${filter}` : '/api/inspections';
         const res = await fetch(url);
-        const data = await res.json();
+        let data = await res.json();
+
+        if(currentUser && currentUser.role === 'ADMIN') updateStats(data);
+
+        const onlyMineBox = document.getElementById('onlyMine');
+        if(onlyMineBox && !onlyMineBox.closest('#onlyMineWrap').classList.contains('hidden') && onlyMineBox.checked){
+            data = data.filter(r => r.inspectorName === currentUser.username);
+        }
+
         const tbl = document.getElementById('tbl');
         const canReview = currentUser && (currentUser.role === 'REVIEWER' || currentUser.role === 'ADMIN');
 
@@ -391,7 +519,7 @@
             return;
         }
 
-        let rows = `<tr><th>ID</th><th>Address</th><th>Inspector</th><th>Status</th>${canReview ? '<th></th>' : ''}</tr>`;
+        let rows = `<tr><th>ID</th><th>Address</th><th>Type</th><th>Submitted By</th><th>Status</th><th>Remarks</th>${canReview ? '<th></th>' : ''}</tr>`;
         data.forEach(r => {
             let actions = '';
             if(canReview){
@@ -408,9 +536,11 @@
             }
             rows += `<tr>
       <td>${r.id}</td>
-      <td>${r.propertyAddress}</td>
+      <td>${r.propertyAddress}${r.contactNumber ? `<div class="remarks-note">${r.contactNumber}</div>` : ''}</td>
+      <td>${r.propertyType || '\u2014'}</td>
       <td>${r.inspectorName}</td>
       <td><span class="badge ${r.status}">${r.status.replace('_',' ')}</span></td>
+      <td>${r.reviewerRemarks ? r.reviewerRemarks : (r.notes ? `<span class="remarks-note">${r.notes}</span>` : '\u2014')}</td>
       ${actions}
     </tr>`;
         });
@@ -418,18 +548,34 @@
     }
 
     async function act(id, action){
-        await fetch(`/api/inspections/${id}/${action}`, {method: 'PUT'});
+        let remarks = '';
+        if(action === 'approve' || action === 'reject'){
+            remarks = window.prompt(`Add a remark for this ${action === 'approve' ? 'approval' : 'rejection'} (optional):`, '') || '';
+        }
+        await fetch(`/api/inspections/${id}/${action}`, {
+            method: 'PUT', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({remarks})
+        });
         loadRequests();
     }
 
     async function submitRequest(){
         const address = document.getElementById('address').value;
+        const propertyType = document.getElementById('propertyType').value;
+        const contactNumber = document.getElementById('contactNumber').value;
+        const notes = document.getElementById('notes').value;
         if(!address) return;
         await fetch('/api/inspections', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({propertyAddress: address, inspectorName: currentUser.username})
+            body: JSON.stringify({
+                propertyAddress: address,
+                inspectorName: currentUser.username,
+                propertyType, contactNumber, notes
+            })
         });
         document.getElementById('address').value = '';
+        document.getElementById('contactNumber').value = '';
+        document.getElementById('notes').value = '';
         loadRequests();
     }
 </script>
