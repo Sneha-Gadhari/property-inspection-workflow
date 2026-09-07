@@ -27,3 +27,4 @@ Git/GitHub → Jenkins (CI) → Selenium (quality gate) → Docker (containerize
 
 ## Project Roadmap
 See project documentation (Weeks 1–15) for the full 15-week MVP plan, architecture, and DevOps lifecycle.
+<!-- Testing Jenkins polling trigger -->
