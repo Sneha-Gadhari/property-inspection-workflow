@@ -25,6 +25,12 @@ pipeline {
                 bat 'mvn package -DskipTests'
             }
         }
+        stage('Deploy') {
+            steps {
+                bat 'taskkill /F /IM java.exe /T || exit 0'
+                bat 'start /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT%'
+            }
+        }
     }
 
     post {
