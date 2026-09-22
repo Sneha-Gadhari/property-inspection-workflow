@@ -28,10 +28,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat '''
-                    for /f "tokens=2" %%P in ('wmic process where "CommandLine like '%%property-inspection-workflow%%' and Name='java.exe'" get ProcessId ^| findstr [0-9]') do taskkill /F /PID %%P
+                    powershell -Command "Get-NetTCPConnection -LocalPort %DEPLOY_PORT% -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }"
                     exit 0
                 '''
-                bat 'start /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT%'
+                bat '''
+                    set BUILD_ID=dontKillMe
+                    start "" /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT%
+                '''
             }
         }
     }
