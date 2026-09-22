@@ -33,8 +33,10 @@ pipeline {
                 '''
                 bat '''
                     set BUILD_ID=dontKillMe
-                    start "" /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT%
+                    start "" /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT% > app-deploy.log 2>&1
                 '''
+                bat 'ping -n 15 127.0.0.1 >nul'
+                bat 'type app-deploy.log'
             }
         }
     }
