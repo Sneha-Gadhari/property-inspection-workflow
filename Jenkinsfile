@@ -32,8 +32,8 @@ pipeline {
                     exit 0
                 '''
                 bat '''
-                    set BUILD_ID=dontKillMe
-                    start "" /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT% > app-deploy.log 2>&1
+                    schtasks /create /tn "PIW_Deploy" /tr "cmd /c cd /d %WORKSPACE% && java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT% > app-deploy.log 2>&1" /sc once /st 23:59 /f
+                    schtasks /run /tn "PIW_Deploy"
                 '''
                 bat 'ping -n 15 127.0.0.1 >nul'
                 bat 'type app-deploy.log'
