@@ -27,7 +27,10 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                bat 'taskkill /F /IM java.exe /T || exit 0'
+                bat '''
+                    for /f "tokens=2" %%P in ('wmic process where "CommandLine like '%%property-inspection-workflow%%' and Name='java.exe'" get ProcessId ^| findstr [0-9]') do taskkill /F /PID %%P
+                    exit 0
+                '''
                 bat 'start /B java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT%'
             }
         }
