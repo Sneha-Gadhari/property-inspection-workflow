@@ -31,11 +31,10 @@ pipeline {
                     powershell -Command "Get-NetTCPConnection -LocalPort %DEPLOY_PORT% -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }"
                     exit 0
                 '''
-                bat '''
-                    schtasks /create /tn "PIW_Deploy" /tr "cmd /c cd /d %WORKSPACE% && java -jar target\\property-inspection-workflow-0.0.1-SNAPSHOT.jar --server.port=%DEPLOY_PORT% > app-deploy.log 2>&1" /sc once /st 23:59 /f
-                    schtasks /run /tn "PIW_Deploy"
-                '''
-                bat 'ping -n 15 127.0.0.1 >nul'
+                bat 'schtasks /create /tn "PIW_Deploy" /tr "%WORKSPACE%\\deploy.bat %DEPLOY_PORT%" /sc once /st 23:59 /f'
+                bat 'schtasks /run /tn "PIW_Deploy"'
+                bat 'ping -n 20 127.0.0.1 >nul'
+                bat 'schtasks /query /tn "PIW_Deploy" /v /fo LIST'
                 bat 'type app-deploy.log'
             }
         }
