@@ -33,7 +33,7 @@ pipeline {
                 '''
                 bat 'schtasks /create /tn "PIW_Deploy" /tr "%WORKSPACE%\\deploy.bat %DEPLOY_PORT%" /sc once /st 23:59 /ru "SYSTEM" /f'
                 bat 'schtasks /run /tn "PIW_Deploy"'
-                bat 'ping -n 20 127.0.0.1 >nul'
+                bat 'ping -n 45 127.0.0.1 >nul'
                 bat 'schtasks /query /tn "PIW_Deploy" /v /fo LIST'
                 bat 'type app-deploy.log'
             }
