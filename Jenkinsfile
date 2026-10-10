@@ -25,6 +25,17 @@ pipeline {
                 bat 'mvn package -DskipTests'
             }
         }
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                    archiveArtifacts artifacts: 'target/screenshots/*.png', allowEmptyArchive: true
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 bat '''
