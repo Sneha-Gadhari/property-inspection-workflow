@@ -28,14 +28,17 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat '''
+                    schtasks /end /tn "PIW_Deploy"
+                    schtasks /delete /tn "PIW_Deploy" /f
                     powershell -Command "Get-NetTCPConnection -LocalPort %DEPLOY_PORT% -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }"
+                    if exist app-deploy.log del app-deploy.log
                     exit 0
                 '''
                 bat 'schtasks /create /tn "PIW_Deploy" /tr "%WORKSPACE%\\deploy.bat %DEPLOY_PORT%" /sc once /st 23:59 /ru "SYSTEM" /f'
                 bat 'schtasks /run /tn "PIW_Deploy"'
                 bat 'ping -n 45 127.0.0.1 >nul'
-                bat 'schtasks /query /tn "PIW_Deploy" /v /fo LIST'
-                bat 'type app-deploy.log'
+                bat 'netstat -ano | findstr :%DEPLOY_PORT% || exit 0'
+                bat 'if exist app-deploy.log (type app-deploy.log) else (echo NO LOG FILE CREATED)'
             }
         }
     }
