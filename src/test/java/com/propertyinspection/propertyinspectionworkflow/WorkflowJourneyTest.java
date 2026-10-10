@@ -16,7 +16,7 @@ class WorkflowJourneyTest extends BaseSeleniumTest {
     void newUserRegistersAdminApprovesAndUserCanLogIn() {
         String username = "inspector_" + uniqueSuffix();
 
-        driver.get(BASE_URL);
+        driver.get(baseUrl());
         driver.findElement(By.id("registerTabBtn")).click();
         driver.findElement(By.id("regUsername")).sendKeys(username);
         driver.findElement(By.id("regPassword")).sendKeys("pass123");

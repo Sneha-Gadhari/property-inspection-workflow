@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.net.URI;
@@ -19,17 +20,21 @@ import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = "server.port=8095")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(ScreenshotOnFailure.class)
 abstract class BaseSeleniumTest {
 
-    static final String BASE_URL = "http://localhost:8095/";
     private static final HttpClient HTTP = HttpClient.newHttpClient();
+
+    @Value("${local.server.port}")
+    int port;
 
     WebDriver driver;
     WebDriverWait wait;
+
+    String baseUrl() {
+        return "http://localhost:" + port + "/";
+    }
 
     @BeforeEach
     void setUpDriver() {
@@ -52,7 +57,7 @@ abstract class BaseSeleniumTest {
     // ---------- UI helpers ----------
 
     void login(String username, String password) {
-        driver.get(BASE_URL);
+        driver.get(baseUrl());
         driver.findElement(By.id("loginUsername")).sendKeys(username);
         driver.findElement(By.id("loginPassword")).sendKeys(password);
         driver.findElement(By.cssSelector("#loginTab button.primary")).click();
@@ -73,7 +78,7 @@ abstract class BaseSeleniumTest {
 
     // ---------- test-data helpers (REST, so UI tests stay focused on the journey) ----------
 
-    static void createApprovedUser(String username, String password, String role) throws Exception {
+    void createApprovedUser(String username, String password, String role) throws Exception {
         String body = post("api/users/register",
                 "{\"username\":\"" + username + "\",\"password\":\"" + password + "\",\"role\":\"" + role + "\"}");
         Matcher m = Pattern.compile("\"id\"\\s*:\\s*(\\d+)").matcher(body);
@@ -83,21 +88,21 @@ abstract class BaseSeleniumTest {
         put("api/users/" + m.group(1) + "/approve");
     }
 
-    static void createRequest(String address, String inspectorName) throws Exception {
+    void createRequest(String address, String inspectorName) throws Exception {
         post("api/inspections", "{\"propertyAddress\":\"" + address + "\",\"inspectorName\":\""
                 + inspectorName + "\",\"propertyType\":\"Residential\",\"contactNumber\":\"9876543210\"}");
     }
 
-    private static String post(String path, String json) throws Exception {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(BASE_URL + path))
+    private String post(String path, String json) throws Exception {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(baseUrl() + path))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
         return HTTP.send(req, HttpResponse.BodyHandlers.ofString()).body();
     }
 
-    private static void put(String path) throws Exception {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(BASE_URL + path))
+    private void put(String path) throws Exception {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(baseUrl() + path))
                 .PUT(HttpRequest.BodyPublishers.noBody())
                 .build();
         HTTP.send(req, HttpResponse.BodyHandlers.ofString());
