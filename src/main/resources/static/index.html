@@ -408,8 +408,8 @@
             body: JSON.stringify({username, password, role})
         });
         if(res.ok){
-            showMsg('Registered! An admin needs to approve your account before you can log in.', 'ok');
             showTab('login');
+            showMsg('Registered! An admin needs to approve your account before you can log in.', 'ok');
         } else {
             showMsg('Registration failed \u2014 that username may already be taken.', 'error');
         }
