@@ -1,0 +1,29 @@
+2026-10-20 18:29:35,516 p=12719 u=sneha n=ansible INFO| PLAY [Configure the Property Inspection Workflow target node] ******************
+2026-10-20 18:29:35,544 p=12719 u=sneha n=ansible INFO| TASK [Gathering Facts] *********************************************************
+2026-10-20 18:29:37,236 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:37,249 p=12719 u=sneha n=ansible INFO| TASK [Install required packages] ***********************************************
+2026-10-20 18:29:39,849 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:39,859 p=12719 u=sneha n=ansible INFO| TASK [Install Docker engine (plain servers only, not Docker Desktop nodes)] ****
+2026-10-20 18:29:39,905 p=12719 u=sneha n=ansible INFO| skipping: [localhost]
+2026-10-20 18:29:39,916 p=12719 u=sneha n=ansible INFO| TASK [Make sure the Docker service is enabled and running (plain servers only)] ***
+2026-10-20 18:29:39,960 p=12719 u=sneha n=ansible INFO| skipping: [localhost]
+2026-10-20 18:29:40,028 p=12719 u=sneha n=ansible INFO| TASK [Create the service user] *************************************************
+2026-10-20 18:29:40,899 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:40,911 p=12719 u=sneha n=ansible INFO| TASK [Create application folders] **********************************************
+2026-10-20 18:29:41,933 p=12719 u=sneha n=ansible INFO| ok: [localhost] => (item=/opt/piw)
+2026-10-20 18:29:42,531 p=12719 u=sneha n=ansible INFO| ok: [localhost] => (item=/opt/piw/config)
+2026-10-20 18:29:43,095 p=12719 u=sneha n=ansible INFO| ok: [localhost] => (item=/opt/piw/logs)
+2026-10-20 18:29:43,119 p=12719 u=sneha n=ansible INFO| TASK [Write the application environment file] **********************************
+2026-10-20 18:29:44,489 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:44,508 p=12719 u=sneha n=ansible INFO| TASK [Check that the Docker engine is reachable] *******************************
+2026-10-20 18:29:45,549 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:45,566 p=12719 u=sneha n=ansible INFO| TASK [Pull the application image] **********************************************
+2026-10-20 18:29:46,903 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:46,921 p=12719 u=sneha n=ansible INFO| TASK [Run the application container] *******************************************
+2026-10-20 18:29:49,086 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:49,103 p=12719 u=sneha n=ansible INFO| TASK [Wait for the application port to open] ***********************************
+2026-10-20 18:29:49,861 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:49,871 p=12719 u=sneha n=ansible INFO| TASK [Health check] ************************************************************
+2026-10-20 18:29:50,809 p=12719 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:29:50,815 p=12719 u=sneha n=ansible INFO| PLAY RECAP *********************************************************************
+2026-10-20 18:29:50,816 p=12719 u=sneha n=ansible INFO| localhost                  : ok=10   changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   

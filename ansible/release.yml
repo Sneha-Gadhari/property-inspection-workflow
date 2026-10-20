@@ -1,0 +1,71 @@
+---
+- name: Release a new version and roll back automatically if it fails
+  hosts: piw_nodes
+  become: true
+  vars:
+    piw_image: snehagadhari17/property-inspection-workflow
+    new_tag: "26"
+    stable_tag: "25"
+    piw_host_port: 8086
+    piw_container_port: 8081
+    piw_base_dir: /opt/piw
+
+  tasks:
+    - name: Release the new version, roll back if anything fails
+      block:
+        - name: Pull the new image
+          community.docker.docker_image:
+            name: "{{ piw_image }}"
+            tag: "{{ new_tag }}"
+            source: pull
+
+        - name: Run the new version
+          community.docker.docker_container:
+            name: piw-ansible
+            image: "{{ piw_image }}:{{ new_tag }}"
+            state: started
+            restart_policy: unless-stopped
+            published_ports:
+              - "{{ piw_host_port }}:{{ piw_container_port }}"
+            env_file: "{{ piw_base_dir }}/config/piw.env"
+
+        - name: Health check of the new version
+          ansible.builtin.uri:
+            url: "http://127.0.0.1:{{ piw_host_port }}/"
+            status_code: 200
+          register: health_new
+          retries: 10
+          delay: 6
+          until: health_new.status == 200
+
+        - name: Release succeeded
+          ansible.builtin.debug:
+            msg: "Release {{ new_tag }} is healthy"
+
+      rescue:
+        - name: Report the failure
+          ansible.builtin.debug:
+            msg: "Release {{ new_tag }} FAILED - rolling back to {{ stable_tag }}"
+
+        - name: Roll back to the stable version
+          community.docker.docker_container:
+            name: piw-ansible
+            image: "{{ piw_image }}:{{ stable_tag }}"
+            state: started
+            restart_policy: unless-stopped
+            published_ports:
+              - "{{ piw_host_port }}:{{ piw_container_port }}"
+            env_file: "{{ piw_base_dir }}/config/piw.env"
+
+        - name: Health check after rollback
+          ansible.builtin.uri:
+            url: "http://127.0.0.1:{{ piw_host_port }}/"
+            status_code: 200
+          register: health_old
+          retries: 10
+          delay: 6
+          until: health_old.status == 200
+
+        - name: Rollback complete
+          ansible.builtin.debug:
+            msg: "Rolled back to {{ stable_tag }} and it is healthy"

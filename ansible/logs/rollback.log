@@ -1,0 +1,31 @@
+2026-10-20 18:33:09,316 p=13588 u=sneha n=ansible INFO| PLAY [Release a new version and roll back automatically if it fails] ***********
+2026-10-20 18:33:09,350 p=13588 u=sneha n=ansible INFO| TASK [Gathering Facts] *********************************************************
+2026-10-20 18:33:11,507 p=13588 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-20 18:33:11,549 p=13588 u=sneha n=ansible INFO| TASK [Pull the new image] ******************************************************
+2026-10-20 18:33:15,221 p=13588 u=sneha n=ansible ERROR| [ERROR]: Task failed: Module failed: Error pulling image snehagadhari17/property-inspection-workflow:broken-release - 404 Client Error for http+docker://localhost/v1.51/images/create?tag=broken-release&fromImage=snehagadhari17%2Fproperty-inspection-workflow: Not Found ("failed to resolve reference "docker.io/snehagadhari17/property-inspection-workflow:broken-release": docker.io/snehagadhari17/property-inspection-workflow:broken-release: not found")
+Origin: /mnt/c/Users/SNEHA/Projects/property-inspection-workflow/ansible/release.yml:16:11
+
+14     - name: Release the new version, roll back if anything fails
+15       block:
+16         - name: Pull the new image
+             ^ column 11
+
+
+2026-10-20 18:33:15,223 p=13588 u=sneha n=ansible INFO| fatal: [localhost]: FAILED! => {"changed": false, "msg": "Error pulling image snehagadhari17/property-inspection-workflow:broken-release - 404 Client Error for http+docker://localhost/v1.51/images/create?tag=broken-release&fromImage=snehagadhari17%2Fproperty-inspection-workflow: Not Found (\"failed to resolve reference \"docker.io/snehagadhari17/property-inspection-workflow:broken-release\": docker.io/snehagadhari17/property-inspection-workflow:broken-release: not found\")"}
+2026-10-20 18:33:15,232 p=13588 u=sneha n=ansible INFO| TASK [Report the failure] ******************************************************
+2026-10-20 18:33:15,277 p=13588 u=sneha n=ansible INFO| ok: [localhost] => {
+    "msg": "Release broken-release FAILED - rolling back to N"
+}
+2026-10-20 18:33:15,334 p=13588 u=sneha n=ansible INFO| TASK [Roll back to the stable version] *****************************************
+2026-10-20 18:33:19,091 p=13588 u=sneha n=ansible ERROR| [ERROR]: Task failed: Module failed: Error pulling image snehagadhari17/property-inspection-workflow:N - 404 Client Error for http+docker://localhost/v1.51/images/create?tag=N&fromImage=snehagadhari17%2Fproperty-inspection-workflow: Not Found ("failed to resolve reference "docker.io/snehagadhari17/property-inspection-workflow:N": docker.io/snehagadhari17/property-inspection-workflow:N: not found")
+Origin: /mnt/c/Users/SNEHA/Projects/property-inspection-workflow/ansible/release.yml:50:11
+
+48             msg: "Release {{ new_tag }} FAILED - rolling back to {{ stable_tag }}"
+49
+50         - name: Roll back to the stable version
+             ^ column 11
+
+
+2026-10-20 18:33:19,093 p=13588 u=sneha n=ansible INFO| fatal: [localhost]: FAILED! => {"changed": false, "msg": "Error pulling image snehagadhari17/property-inspection-workflow:N - 404 Client Error for http+docker://localhost/v1.51/images/create?tag=N&fromImage=snehagadhari17%2Fproperty-inspection-workflow: Not Found (\"failed to resolve reference \"docker.io/snehagadhari17/property-inspection-workflow:N\": docker.io/snehagadhari17/property-inspection-workflow:N: not found\")"}
+2026-10-20 18:33:19,096 p=13588 u=sneha n=ansible INFO| PLAY RECAP *********************************************************************
+2026-10-20 18:33:19,097 p=13588 u=sneha n=ansible INFO| localhost                  : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=1    ignored=0   
