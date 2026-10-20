@@ -1,0 +1,98 @@
+---
+- name: Configure the Property Inspection Workflow target node
+  hosts: piw_nodes
+  become: true
+  vars:
+    piw_user: piw
+    piw_base_dir: /opt/piw
+    piw_host_port: 8086
+    piw_container_port: 8081
+    piw_image: snehagadhari17/property-inspection-workflow
+    piw_image_tag: "25"
+    install_docker: false
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - curl
+          - python3-docker
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install Docker engine (plain servers only, not Docker Desktop nodes)
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+      when: install_docker | bool
+
+    - name: Make sure the Docker service is enabled and running (plain servers only)
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+      when: install_docker | bool
+
+    - name: Create the service user
+      ansible.builtin.user:
+        name: "{{ piw_user }}"
+        system: true
+        shell: /usr/sbin/nologin
+        create_home: false
+
+    - name: Create application folders
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ piw_user }}"
+        mode: "0755"
+      loop:
+        - "{{ piw_base_dir }}"
+        - "{{ piw_base_dir }}/config"
+        - "{{ piw_base_dir }}/logs"
+
+    - name: Write the application environment file
+      ansible.builtin.copy:
+        dest: "{{ piw_base_dir }}/config/piw.env"
+        owner: "{{ piw_user }}"
+        mode: "0644"
+        content: |
+          # Managed by Ansible - do not edit by hand
+          SERVER_PORT={{ piw_container_port }}
+
+    - name: Check that the Docker engine is reachable
+      ansible.builtin.command: docker info
+      register: docker_info
+      changed_when: false
+
+    - name: Pull the application image
+      community.docker.docker_image:
+        name: "{{ piw_image }}"
+        tag: "{{ piw_image_tag }}"
+        source: pull
+
+    - name: Run the application container
+      community.docker.docker_container:
+        name: piw-ansible
+        image: "{{ piw_image }}:{{ piw_image_tag }}"
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "{{ piw_host_port }}:{{ piw_container_port }}"
+        env_file: "{{ piw_base_dir }}/config/piw.env"
+
+    - name: Wait for the application port to open
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: "{{ piw_host_port }}"
+        timeout: 120
+
+    - name: Health check
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ piw_host_port }}/"
+        status_code: 200
+      register: health
+      retries: 10
+      delay: 6
+      until: health.status == 200
