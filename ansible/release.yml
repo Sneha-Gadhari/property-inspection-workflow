@@ -9,6 +9,7 @@
     piw_host_port: 8086
     piw_container_port: 8081
     piw_base_dir: /opt/piw
+    health_path: "/"
 
   tasks:
     - name: Release the new version, roll back if anything fails
@@ -31,7 +32,7 @@
 
         - name: Health check of the new version
           ansible.builtin.uri:
-            url: "http://127.0.0.1:{{ piw_host_port }}/"
+            url: "http://127.0.0.1:{{ piw_host_port }}{{ health_path }}"
             status_code: 200
           register: health_new
           retries: 10
