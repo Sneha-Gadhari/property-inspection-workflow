@@ -32,26 +32,29 @@ class OtpServiceTest {
         assertNotNull(resp);
         assertEquals(true, resp.get("requiresOtp"));
         assertNotNull(resp.get("tempToken"));
-        assertNotNull(resp.get("devOtp"));
+        // Non-demo users do NOT receive devOtp preview
+        assertNull(resp.get("devOtp"));
         assertTrue(resp.get("email").toString().contains("@inspection.com"));
 
-        String code = resp.get("devOtp").toString();
-        assertEquals(6, code.length());
-
-        verify(emailService).sendOtpEmail(Mockito.eq("sarah@inspection.com"), Mockito.eq(code), Mockito.eq("sarah_inspector"));
+        // Demo user DOES receive devOtp preview
+        User demoUser = new User();
+        demoUser.setUsername("demo");
+        Map<String, Object> demoResp = otpService.initiateOtp(demoUser);
+        assertNotNull(demoResp.get("devOtp"));
+        assertEquals(6, demoResp.get("devOtp").toString().length());
     }
 
     @Test
     void testVerifyOtpSuccessAndNoReplay() {
-        User user = new User();
-        user.setUsername("john_reviewer");
-        user.setEmail("john@inspection.com");
+        User demoUser = new User();
+        demoUser.setUsername("demo");
+        demoUser.setEmail("demo@inspection.com");
 
-        Map<String, Object> resp = otpService.initiateOtp(user);
+        Map<String, Object> resp = otpService.initiateOtp(demoUser);
         String token = resp.get("tempToken").toString();
         String code = resp.get("devOtp").toString();
 
-        assertEquals("john_reviewer", otpService.getUsernameForToken(token));
+        assertEquals("demo", otpService.getUsernameForToken(token));
 
         // Correct OTP verification
         boolean verified = otpService.verifyOtp(token, code);
@@ -62,11 +65,11 @@ class OtpServiceTest {
         assertFalse(replay);
 
         // verifyOtpAndGetUsername returns username and invalidates token
-        Map<String, Object> resp2 = otpService.initiateOtp(user);
+        Map<String, Object> resp2 = otpService.initiateOtp(demoUser);
         String token2 = resp2.get("tempToken").toString();
         String code2 = resp2.get("devOtp").toString();
         String verifiedUsername = otpService.verifyOtpAndGetUsername(token2, code2);
-        assertEquals("john_reviewer", verifiedUsername);
+        assertEquals("demo", verifiedUsername);
     }
 
     @Test

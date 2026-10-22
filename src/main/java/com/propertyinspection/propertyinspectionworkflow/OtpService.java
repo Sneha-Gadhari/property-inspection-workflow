@@ -62,7 +62,12 @@ public class OtpService {
         resp.put("requiresOtp", true);
         resp.put("tempToken", tempToken);
         resp.put("email", maskEmail(targetEmail));
-        resp.put("devOtp", code); // Included for convenient local preview & test visibility
+        resp.put("username", user.getUsername());
+
+        // Preview of OTP is ONLY provided for the demo account
+        if ("demo".equalsIgnoreCase(user.getUsername())) {
+            resp.put("devOtp", code);
+        }
         return resp;
     }
 
