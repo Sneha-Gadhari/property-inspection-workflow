@@ -1,0 +1,48 @@
+2026-10-22 01:44:02,925 p=1298 u=sneha n=ansible INFO| PLAY [Release a new version and roll back automatically if it fails] ***************************************************
+2026-10-22 01:44:02,979 p=1298 u=sneha n=ansible INFO| TASK [Gathering Facts] *************************************************************************************************
+2026-10-22 01:44:05,280 p=1298 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-22 01:44:05,303 p=1298 u=sneha n=ansible INFO| TASK [Find the container that is running now] **************************************************************************
+2026-10-22 01:44:06,848 p=1298 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-22 01:44:06,868 p=1298 u=sneha n=ansible INFO| TASK [Remember what is running now as the rollback target] *************************************************************
+2026-10-22 01:44:06,913 p=1298 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-22 01:44:06,998 p=1298 u=sneha n=ansible INFO| TASK [Pull the new image] **********************************************************************************************
+2026-10-22 01:44:08,550 p=1298 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-22 01:44:08,590 p=1298 u=sneha n=ansible INFO| TASK [Run the new version] *********************************************************************************************
+2026-10-22 01:44:13,389 p=1298 u=sneha n=ansible INFO| changed: [localhost]
+2026-10-22 01:44:13,403 p=1298 u=sneha n=ansible INFO| TASK [Health check of the new version] *********************************************************************************
+2026-10-22 01:44:14,870 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (10 retries left).
+2026-10-22 01:44:21,528 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (9 retries left).
+2026-10-22 01:44:28,743 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (8 retries left).
+2026-10-22 01:44:35,685 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (7 retries left).
+2026-10-22 01:44:42,565 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (6 retries left).
+2026-10-22 01:44:50,124 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (5 retries left).
+2026-10-22 01:44:56,903 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (4 retries left).
+2026-10-22 01:45:03,646 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (3 retries left).
+2026-10-22 01:45:10,411 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (2 retries left).
+2026-10-22 01:45:17,201 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check of the new version (1 retries left).
+2026-10-22 01:45:23,902 p=1298 u=sneha n=ansible ERROR| [ERROR]: Task failed: Module failed: Status code was 404 and not [200]: HTTP Error 404: 
+Origin: /mnt/c/Users/SNEHA/Projects/property-inspection-workflow/ansible/release.yml:42:11
+
+40             env_file: "{{ piw_base_dir }}/config/piw.env"
+41
+42         - name: Health check of the new version
+             ^ column 11
+
+
+2026-10-22 01:45:23,904 p=1298 u=sneha n=ansible INFO| fatal: [localhost]: FAILED! => {"attempts": 10, "changed": false, "connection": "close", "content_type": "application/json", "date": "Thu, 22 Oct 2026 01:45:23 GMT", "elapsed": 0, "json": {"error": "Not Found", "path": "/missing", "status": 404, "timestamp": "2026-10-22T01:45:23.785Z"}, "msg": "Status code was 404 and not [200]: HTTP Error 404: ", "redirected": false, "status": 404, "transfer_encoding": "chunked", "url": "http://127.0.0.1:8086/missing"}
+2026-10-22 01:45:23,927 p=1298 u=sneha n=ansible INFO| TASK [Report the failure] **********************************************************************************************
+2026-10-22 01:45:23,974 p=1298 u=sneha n=ansible INFO| ok: [localhost] => {
+    "msg": "Release 25 FAILED - rolling back to snehagadhari17/property-inspection-workflow:26"
+}
+2026-10-22 01:45:23,988 p=1298 u=sneha n=ansible INFO| TASK [Roll back to the previous version] *******************************************************************************
+2026-10-22 01:45:27,901 p=1298 u=sneha n=ansible INFO| changed: [localhost]
+2026-10-22 01:45:27,920 p=1298 u=sneha n=ansible INFO| TASK [Health check after rollback] *************************************************************************************
+2026-10-22 01:45:28,921 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check after rollback (10 retries left).
+2026-10-22 01:45:35,576 p=1298 u=sneha n=ansible INFO| FAILED - RETRYING: [localhost]: Health check after rollback (9 retries left).
+2026-10-22 01:45:42,563 p=1298 u=sneha n=ansible INFO| ok: [localhost]
+2026-10-22 01:45:42,577 p=1298 u=sneha n=ansible INFO| TASK [Rollback complete] ***********************************************************************************************
+2026-10-22 01:45:42,623 p=1298 u=sneha n=ansible INFO| ok: [localhost] => {
+    "msg": "Rolled back to snehagadhari17/property-inspection-workflow:26 and it is healthy"
+}
+2026-10-22 01:45:42,626 p=1298 u=sneha n=ansible INFO| PLAY RECAP *************************************************************************************************************
+2026-10-22 01:45:42,627 p=1298 u=sneha n=ansible INFO| localhost                  : ok=9    changed=2    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   

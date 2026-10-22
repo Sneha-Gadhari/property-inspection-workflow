@@ -12,6 +12,15 @@
     health_path: "/"
 
   tasks:
+    - name: Find the container that is running now
+      community.docker.docker_container_info:
+        name: piw-ansible
+      register: current
+
+    - name: Remember what is running now as the rollback target
+      ansible.builtin.set_fact:
+        rollback_image: "{{ current.container.Config.Image if current.exists else piw_image + ':' + stable_tag }}"
+
     - name: Release the new version, roll back if anything fails
       block:
         - name: Pull the new image
@@ -46,12 +55,12 @@
       rescue:
         - name: Report the failure
           ansible.builtin.debug:
-            msg: "Release {{ new_tag }} FAILED - rolling back to {{ stable_tag }}"
+            msg: "Release {{ new_tag }} FAILED - rolling back to {{ rollback_image }}"
 
-        - name: Roll back to the stable version
+        - name: Roll back to the previous version
           community.docker.docker_container:
             name: piw-ansible
-            image: "{{ piw_image }}:{{ stable_tag }}"
+            image: "{{ rollback_image }}"
             state: started
             restart_policy: unless-stopped
             published_ports:
@@ -69,4 +78,4 @@
 
         - name: Rollback complete
           ansible.builtin.debug:
-            msg: "Rolled back to {{ stable_tag }} and it is healthy"
+            msg: "Rolled back to {{ rollback_image }} and it is healthy"

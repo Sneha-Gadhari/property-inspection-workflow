@@ -85,7 +85,13 @@ pipeline {
                 bat 'docker logs --tail 5 piw-app'
             }
         }
-
+        stage('Ansible Release') {
+            steps {
+                bat 'wsl -d Ubuntu --cd "%WORKSPACE%\\ansible" -- ansible-playbook -i inventory.ini release.yml -e new_tag=%BUILD_NUMBER%'
+                bat 'curl -f -s -o NUL http://localhost:8086/ && echo ANSIBLE NODE HEALTHY'
+                bat 'docker ps --filter name=piw-ansible --format "{{.Names}} {{.Image}} {{.Status}}"'
+            }
+        }
     }
 
     post {
