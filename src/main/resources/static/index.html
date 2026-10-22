@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Inspection Workflow</title>
+    <title>Property Inspection Workflow - Enterprise Real-Estate Portal</title>
+    <!-- Modern Typography via Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Light Theme Tokens */
             --primary: #2563EB;
             --primary-dark: #1D4ED8;
             --primary-light: #EFF6FF;
+            --primary-glow: rgba(37, 99, 235, 0.25);
             --navy-dark: #0F172A;
             --navy-card: #1E293B;
             --ink: #0F172A;
@@ -18,6 +24,7 @@
             --border-light: #F1F5F9;
             --bg: #F8FAFC;
             --card: #FFFFFF;
+            --card-subtle: #F8FAFC;
             --green: #059669;
             --green-dark: #047857;
             --green-bg: #ECFDF5;
@@ -30,37 +37,67 @@
             --purple: #7C3AED;
             --purple-bg: #F5F3FF;
             --gray-bg: #F1F5F9;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 14px;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 10px -1px rgba(0, 0, 0, 0.08), 0 2px 5px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.1), 0 4px 8px -4px rgba(0, 0, 0, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --header-bg: rgba(15, 23, 42, 0.94);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Tokens */
+            --bg: #0B0F19;
+            --card: #131B2E;
+            --card-subtle: #19233C;
+            --navy-dark: #070B14;
+            --navy-card: #131B2E;
+            --ink: #F1F5F9;
+            --ink-secondary: #94A3B8;
+            --muted: #94A3B8;
+            --border: #1E293B;
+            --border-light: #1A2336;
+            --gray-bg: #1A2234;
+            --primary-light: rgba(37, 99, 235, 0.16);
+            --green-bg: rgba(5, 150, 105, 0.18);
+            --red-bg: rgba(220, 38, 38, 0.18);
+            --amber-bg: rgba(217, 119, 6, 0.18);
+            --purple-bg: rgba(124, 58, 237, 0.18);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 6px 14px 0 rgba(0, 0, 0, 0.45);
+            --shadow-lg: 0 14px 30px -4px rgba(0, 0, 0, 0.6);
+            --header-bg: rgba(7, 11, 20, 0.94);
         }
 
         * { box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background: var(--bg);
             color: var(--ink);
             margin: 0;
             padding: 0;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
 
         /* Top Header Navigation */
         header {
-            background: var(--navy-dark);
+            background: var(--header-bg);
             color: white;
-            padding: 14px 32px;
+            padding: 12px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             position: sticky;
             top: 0;
             z-index: 40;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s ease;
         }
         .header-brand {
             display: flex;
@@ -68,20 +105,21 @@
             gap: 12px;
         }
         .brand-icon {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             background: linear-gradient(135deg, #3B82F6, #1D4ED8);
-            border-radius: 8px;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
         }
         header h1 {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             margin: 0;
-            letter-spacing: 0.2px;
+            letter-spacing: -0.2px;
             color: #F8FAFC;
         }
         .header-user-info {
@@ -94,7 +132,7 @@
             align-items: center;
             gap: 8px;
             background: rgba(255, 255, 255, 0.08);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
@@ -102,7 +140,7 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: #3B82F6;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
             color: white;
             font-size: 11px;
             font-weight: 700;
@@ -115,26 +153,46 @@
             color: #E2E8F0;
         }
         header strong { color: white; }
+
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #E2E8F0;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: rotate(15deg);
+        }
+
         .logout-btn {
             background: transparent;
             color: #CBD5E1;
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 6px 14px;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
         }
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
             color: white;
             border-color: rgba(255, 255, 255, 0.35);
         }
 
         /* Main Container */
         main {
-            max-width: 1160px;
+            max-width: 1180px;
             margin: 0 auto;
             padding: 28px 24px 60px;
         }
@@ -143,7 +201,7 @@
         .role-hero {
             background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
             border-radius: var(--radius-lg);
-            padding: 22px 28px;
+            padding: 24px 30px;
             color: white;
             margin-bottom: 24px;
             display: flex;
@@ -152,29 +210,33 @@
             box-shadow: var(--shadow-md);
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .role-hero::after {
             content: "";
             position: absolute;
             right: -30px;
             top: -30px;
-            width: 140px;
-            height: 140px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
             border-radius: 50%;
+            pointer-events: none;
         }
         .hero-title {
-            font-size: 19px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
             margin: 0 0 4px;
             display: flex;
             align-items: center;
             gap: 10px;
+            letter-spacing: -0.3px;
         }
         .hero-subtitle {
             font-size: 13px;
             color: #94A3B8;
             margin: 0;
+            font-weight: 400;
         }
         .hero-badges {
             display: flex;
@@ -184,32 +246,32 @@
         /* Auth View */
         .auth-wrap {
             max-width: 440px;
-            margin: 60px auto;
+            margin: 50px auto;
             padding: 0 16px;
         }
         .auth-brand {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 26px;
         }
         .auth-brand .brand-logo {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             background: linear-gradient(135deg, #2563EB, #1D4ED8);
-            border-radius: 12px;
+            border-radius: 14px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             color: white;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            margin-bottom: 14px;
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
         }
         .auth-wrap h1 {
             text-align: center;
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 23px;
+            font-weight: 800;
             margin: 0 0 6px;
-            color: var(--navy-dark);
-            letter-spacing: -0.3px;
+            color: var(--ink);
+            letter-spacing: -0.4px;
         }
         .auth-subtitle {
             text-align: center;
@@ -226,14 +288,15 @@
             padding: 24px 26px;
             margin-bottom: 24px;
             box-shadow: var(--shadow-sm);
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
         }
         .card h2 {
             font-size: 15px;
@@ -255,8 +318,8 @@
         /* Tab Switch */
         .tab-switch {
             display: flex;
-            background: #F1F5F9;
-            border-radius: 8px;
+            background: var(--gray-bg);
+            border-radius: var(--radius-sm);
             padding: 4px;
             margin-bottom: 22px;
         }
@@ -271,9 +334,10 @@
             color: var(--muted);
             border-radius: 6px;
             transition: all 0.15s ease;
+            font-family: inherit;
         }
         .tab-switch button.active {
-            background: white;
+            background: var(--card);
             color: var(--primary);
             box-shadow: var(--shadow-sm);
         }
@@ -293,27 +357,26 @@
         .label-hint {
             font-weight: 400;
             text-transform: none;
-            color: #94A3B8;
+            color: var(--muted);
             margin-left: 4px;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px 14px;
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             font-size: 14px;
-            background: white;
+            background: var(--card);
             color: var(--ink);
             font-family: inherit;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            box-shadow: 0 0 0 3px var(--primary-glow);
         }
-
         textarea {
             resize: vertical;
             min-height: 72px;
@@ -334,40 +397,120 @@
             .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
         }
 
-        /* Inspection Checklist Selector */
+        /* Multi-Section Form Styling */
+        .form-step-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .form-step-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            background: var(--card-subtle);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .form-step-pill.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .step-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .form-step-pill.active .step-num {
+            background: var(--primary);
+            color: white;
+        }
+
+        .form-section-card {
+            background: var(--card-subtle);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+        }
+        .form-section-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .section-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Interactive Checklist Selector */
         .checklist-group {
-            margin-top: 16px;
-            background: #F8FAFC;
+            margin-top: 14px;
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            padding: 14px;
+            padding: 16px;
         }
         .checklist-title {
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             color: var(--muted);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
         }
         .checklist-items {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 10px;
         }
         .check-pill {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: white;
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 7px 10px;
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
             font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             user-select: none;
             transition: all 0.15s ease;
+            color: var(--ink);
         }
         .check-pill:hover {
             border-color: var(--primary);
@@ -379,26 +522,135 @@
             cursor: pointer;
         }
 
+        /* 3-State Quick Checklist Preset Buttons */
+        .checklist-presets {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--ink-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .preset-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Drag & Drop Photo Mock Attachment Zone */
+        .photo-dropzone {
+            margin-top: 14px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            text-align: center;
+            background: var(--card);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .photo-dropzone:hover, .photo-dropzone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .photo-drop-icon {
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .photo-drop-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 2px;
+        }
+        .photo-drop-hint {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .photo-preview-grid {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .photo-preview-item {
+            position: relative;
+            width: 80px;
+            height: 60px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--navy-dark);
+            box-shadow: var(--shadow-sm);
+        }
+        .photo-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .photo-preview-tag {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.75);
+            color: white;
+            font-size: 9px;
+            padding: 2px 4px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            text-align: center;
+        }
+        .photo-remove-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(220, 38, 38, 0.85);
+            color: white;
+            border: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
         /* Primary Button */
         button.primary {
             width: 100%;
             margin-top: 20px;
             padding: 12px 18px;
-            background: var(--primary);
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
             color: white;
             border: none;
             border-radius: var(--radius-sm);
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: background 0.15s ease, transform 0.05s ease;
-            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            font-family: inherit;
         }
-        button.primary:hover { background: var(--primary-dark); }
+        button.primary:hover {
+            background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
         button.primary:active { transform: translateY(1px); }
 
         /* Secondary & Action Buttons */
@@ -411,16 +663,17 @@
             margin-right: 6px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
-            background: white;
+            background: var(--card);
             color: var(--ink);
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
             transition: all 0.15s ease;
+            font-family: inherit;
         }
         .icon-btn:hover {
-            background: #F1F5F9;
-            border-color: #CBD5E1;
+            background: var(--gray-bg);
+            border-color: var(--muted);
         }
         .icon-btn.approve {
             background: var(--green-bg);
@@ -462,48 +715,94 @@
             border: 1px solid #A7F3D0;
         }
 
+        /* Quick Status Filter Tabs */
+        .status-filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .status-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--ink-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .status-tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .status-tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+        }
+        .status-tab-btn .tab-count {
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.08);
+            font-size: 10px;
+        }
+        .status-tab-btn.active .tab-count {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
         /* Tables */
         .table-wrap {
             overflow-x: auto;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
+            background: var(--card);
         }
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            background: white;
+            background: var(--card);
         }
         th {
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             color: var(--muted);
             font-weight: 700;
             padding: 12px 14px;
-            background: #F8FAFC;
+            background: var(--card-subtle);
             border-bottom: 1px solid var(--border);
             white-space: nowrap;
         }
         td {
-            padding: 12px 14px;
+            padding: 13px 14px;
             border-bottom: 1px solid var(--border-light);
             font-size: 13px;
             vertical-align: middle;
+            color: var(--ink);
         }
         tr:last-child td { border-bottom: none; }
         tbody tr {
             transition: background 0.1s ease;
         }
         tbody tr:hover {
-            background: #F8FAFC;
+            background: var(--card-subtle);
         }
 
         /* Status Badges */
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 11px;
@@ -520,9 +819,9 @@
             display: inline-block;
         }
         .badge.SUBMITTED {
-            background: #F1F5F9;
-            color: #475569;
-            border: 1px solid #CBD5E1;
+            background: var(--gray-bg);
+            color: var(--ink-secondary);
+            border: 1px solid var(--border);
         }
         .badge.SUBMITTED::before { background: #64748B; }
 
@@ -531,7 +830,15 @@
             color: var(--amber-dark);
             border: 1px solid #FDE68A;
         }
-        .badge.UNDER_REVIEW::before { background: var(--amber); }
+        .badge.UNDER_REVIEW::before {
+            background: var(--amber);
+            animation: pulse-dot 1.8s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
 
         .badge.APPROVED {
             background: var(--green-bg);
@@ -568,15 +875,16 @@
         .urgency-pill {
             display: inline-block;
             font-size: 10px;
-            font-weight: 700;
-            padding: 2px 6px;
+            font-weight: 800;
+            padding: 2px 7px;
             border-radius: 4px;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        .urgency-LOW { background: #F1F5F9; color: #64748B; }
-        .urgency-MEDIUM { background: #EFF6FF; color: #1D4ED8; }
-        .urgency-HIGH { background: #FEF3C7; color: #B45309; }
-        .urgency-URGENT { background: #FEE2E2; color: #B91C1C; }
+        .urgency-LOW { background: var(--gray-bg); color: #64748B; border: 1px solid var(--border); }
+        .urgency-MEDIUM { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+        .urgency-HIGH { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+        .urgency-URGENT { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
 
         /* Details & Notes */
         .remarks-note {
@@ -584,25 +892,24 @@
             color: var(--muted);
             margin-top: 3px;
         }
-        .contact-chip {
-            font-size: 11px;
-            color: #475569;
-            background: #F1F5F9;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 2px;
-        }
         .view-details-link {
             color: var(--primary);
             text-decoration: none;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             display: inline-block;
             margin-left: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: var(--primary-light);
+            transition: all 0.15s ease;
         }
-        .view-details-link:hover { text-decoration: underline; }
+        .view-details-link:hover {
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+        }
 
         /* Empty & Loading States */
         .empty {
@@ -639,21 +946,21 @@
             .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
         .stat-box {
-            background: white;
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 16px 18px;
             text-align: left;
             position: relative;
             box-shadow: var(--shadow-sm);
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         .stat-box:hover {
             box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
         .stat-box .num {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--ink);
             line-height: 1.1;
@@ -664,11 +971,11 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 700;
-            margin-top: 4px;
+            margin-top: 5px;
         }
         .stat-box .stat-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             position: absolute;
             top: 18px;
@@ -690,11 +997,12 @@
             .charts-grid { grid-template-columns: 1fr; }
         }
         .chart-card {
-            background: white;
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 20px 22px;
             box-shadow: var(--shadow-sm);
+            position: relative;
         }
         .chart-header {
             display: flex;
@@ -716,6 +1024,7 @@
             align-items: center;
             justify-content: center;
             min-height: 200px;
+            position: relative;
         }
         .chart-legend {
             display: flex;
@@ -738,15 +1047,34 @@
             border-radius: 3px;
         }
 
-        /* Modal */
+        /* Interactive Floating Chart Tooltip */
+        .chart-tooltip {
+            position: absolute;
+            background: var(--navy-dark);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -120%);
+            transition: opacity 0.15s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        /* Modal & Status Pipeline Stepper */
         .modal-backdrop {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(2px);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -754,15 +1082,16 @@
             padding: 16px;
         }
         .modal-box {
-            background: white;
+            background: var(--card);
             border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 580px;
+            max-width: 620px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border);
-            padding: 24px;
+            padding: 26px;
+            position: relative;
         }
         .modal-header {
             display: flex;
@@ -774,33 +1103,133 @@
         }
         .modal-header h3 {
             margin: 0;
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--navy-dark);
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ink);
+            letter-spacing: -0.2px;
         }
         .modal-close {
-            background: #F1F5F9;
+            background: var(--gray-bg);
             border: none;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--muted);
+            transition: all 0.15s ease;
         }
-        .modal-close:hover { background: #E2E8F0; color: var(--ink); }
+        .modal-close:hover { background: var(--border); color: var(--ink); }
+
+        /* Visual Status Stepper Pipeline */
+        .status-stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin: 18px 0 22px;
+            padding: 0 10px;
+        }
+        .status-stepper::before {
+            content: "";
+            position: absolute;
+            top: 14px;
+            left: 30px;
+            right: 30px;
+            height: 3px;
+            background: var(--border);
+            z-index: 1;
+        }
+        .step-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 3px solid var(--border);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            transition: all 0.2s ease;
+        }
+        .step-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+        .step-node.completed .step-circle {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+        .step-node.completed .step-label { color: var(--green-dark); }
+        .step-node.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+        .step-node.active .step-label { color: var(--primary); }
+        .step-node.rejected .step-circle {
+            background: var(--red);
+            border-color: var(--red);
+            color: white;
+        }
+        .step-node.rejected .step-label { color: var(--red); }
+
         .detail-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 9px 0;
             border-bottom: 1px solid var(--border-light);
             font-size: 13px;
         }
         .detail-label { color: var(--muted); font-weight: 500; }
         .detail-val { font-weight: 600; color: var(--ink); text-align: right; }
+
+        /* Print Certificate Styling */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            header, .role-hero, .stats-row, .charts-grid, #submitCard, #pendingCard, #usersCard,
+            .card, .status-filter-tabs, .modal-close, #printCertBtn, .tab-switch, #modalActionButtons {
+                display: none !important;
+            }
+            .modal-backdrop {
+                position: static !important;
+                background: none !important;
+                padding: 0 !important;
+            }
+            .modal-box {
+                box-shadow: none !important;
+                border: 2px solid #000 !important;
+                max-width: 100% !important;
+                padding: 24px !important;
+            }
+            .certificate-header {
+                display: block !important;
+                text-align: center;
+                border-bottom: 2px solid #000;
+                padding-bottom: 14px;
+                margin-bottom: 20px;
+            }
+        }
 
         .hidden { display: none !important; }
     </style>
@@ -811,7 +1240,7 @@
 <div id="authView" class="auth-wrap">
     <div class="auth-brand">
         <div class="brand-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
@@ -831,15 +1260,57 @@
             <input id="loginUsername" placeholder="e.g. demo" autocomplete="username">
             <label>Password</label>
             <input id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password">
+
+            <!-- 2FA Email OTP Verification Option -->
+            <div style="margin-top: 14px; padding: 10px 14px; background: var(--card-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                <label class="checkbox-row" style="margin: 0; font-weight: 600; font-size: 13px;">
+                    <input type="checkbox" id="loginUseOtp">
+                    <span>Verify with Email OTP (2FA)</span>
+                </label>
+            </div>
+
             <button class="primary" onclick="login()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                 Log In
             </button>
         </div>
 
+        <!-- 6-digit Email OTP Verification Step -->
+        <div id="otpStep" class="hidden">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #10B981, #059669); color: white; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <h3 style="margin: 0 0 4px; font-size: 16px; font-weight: 800; color: var(--ink);">Two-Factor Verification</h3>
+                <p style="margin: 0; font-size: 12px; color: var(--muted);">We sent a 6-digit code to <strong id="otpEmailTarget" style="color:var(--ink);"></strong></p>
+            </div>
+
+            <div id="devOtpBadge" class="hidden" style="background: var(--amber-bg); color: var(--amber-dark); border: 1px solid #FDE68A; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 14px; text-align: center;"></div>
+
+            <label style="text-align:center;">Enter 6-digit Code</label>
+            <input id="otpCode" maxlength="6" placeholder="••••••" style="text-align: center; font-size: 24px; font-weight: 800; letter-spacing: 8px; padding: 8px;" autocomplete="one-time-code">
+
+            <button class="primary" id="verifyOtpBtn" onclick="verifyOtp()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Verify & Log In
+            </button>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 12px;">
+                <button type="button" id="resendOtpBtn" onclick="resendOtp()" style="background:none; border:none; color:var(--primary); font-weight:600; cursor:pointer; padding:0;">Resend OTP</button>
+                <button type="button" onclick="cancelOtp()" style="background:none; border:none; color:var(--muted); font-weight:500; cursor:pointer; padding:0;">← Back to login</button>
+            </div>
+            <div id="otpMsg" style="margin-top: 10px;"></div>
+        </div>
+
         <div id="registerTab" class="hidden">
             <label>Username</label>
             <input id="regUsername" placeholder="Choose a unique username" autocomplete="username">
+            <label>Email Address <span class="label-hint">(for 2FA OTP & notifications)</span></label>
+            <input id="regEmail" type="email" placeholder="e.g. user@example.com" autocomplete="email">
             <label>Password</label>
             <input id="regPassword" type="password" placeholder="Choose a secure password" autocomplete="new-password">
             <label>I am a...</label>
@@ -871,6 +1342,13 @@
             <h1>Property Inspection Workflow</h1>
         </div>
         <div class="header-user-info">
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+
             <div class="user-pill">
                 <div class="user-avatar" id="userInitial">U</div>
                 <span class="who">Signed in as <strong id="whoami"></strong> &middot; <span id="roleLabel"></span></span>
@@ -957,7 +1435,7 @@
             </div>
         </div>
 
-        <!-- Admin: Pending Approvals Card -->
+        <!-- Admin: Pending Approvals Card (Now with both Approve and Reject!) -->
         <div id="pendingCard" class="card hidden">
             <div class="card-header">
                 <div>
@@ -965,7 +1443,7 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
                         Pending User Approvals
                     </h2>
-                    <div class="card-subtitle">Review and authorize new inspector and reviewer registrations</div>
+                    <div class="card-subtitle">Review, authorize, or decline new inspector and reviewer registrations</div>
                 </div>
             </div>
             <div class="table-wrap">
@@ -1001,84 +1479,139 @@
                 </div>
             </div>
 
-            <!-- Core Required Fields -->
-            <label>Property Address <span style="color:var(--red)">*</span></label>
-            <input id="address" placeholder="e.g. 12 MG Road, Mumbai" required>
-
-            <div class="form-grid-2">
-                <div>
-                    <label>Property Type <span style="color:var(--red)">*</span></label>
-                    <select id="propertyType">
-                        <option value="Residential">Residential</option>
-                        <option value="Commercial">Commercial</option>
-                        <option value="Industrial">Industrial</option>
-                        <option value="Land / Plot">Land / Plot</option>
-                    </select>
+            <!-- Multi-Section Visual Form Header -->
+            <div class="form-step-tabs">
+                <div class="form-step-pill active" onclick="scrollToSection('secLocation')">
+                    <span class="step-num">1</span>
+                    <span>Location & Client</span>
                 </div>
-                <div>
-                    <label>Contact Number</label>
-                    <input id="contactNumber" placeholder="e.g. 98765 43210">
+                <div class="form-step-pill" onclick="scrollToSection('secSpecs')">
+                    <span class="step-num">2</span>
+                    <span>Building Specs</span>
+                </div>
+                <div class="form-step-pill" onclick="scrollToSection('secFindings')">
+                    <span class="step-num">3</span>
+                    <span>Audit & Evidence</span>
                 </div>
             </div>
 
-            <!-- Optional Enhanced Fields -->
-            <div class="form-grid-3">
-                <div>
-                    <label>Owner / Client Name <span class="label-hint">(optional)</span></label>
-                    <input id="ownerName" placeholder="e.g. Ramesh Shah">
+            <!-- Section 1: Location & Ownership -->
+            <div id="secLocation" class="form-section-card">
+                <div class="form-section-header">
+                    <h3>1. Property Location & Details</h3>
+                    <span class="section-badge">Essential</span>
                 </div>
-                <div>
-                    <label>Urgency Level <span class="label-hint">(optional)</span></label>
-                    <select id="urgency">
-                        <option value="LOW">Low</option>
-                        <option value="MEDIUM" selected>Medium</option>
-                        <option value="HIGH">High</option>
-                        <option value="URGENT">Urgent</option>
-                    </select>
+                <label>Property Address <span style="color:var(--red)">*</span></label>
+                <input id="address" placeholder="e.g. 12 MG Road, Mumbai" required>
+
+                <div class="form-grid-2">
+                    <div>
+                        <label>Property Type <span style="color:var(--red)">*</span></label>
+                        <select id="propertyType">
+                            <option value="Residential">Residential</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="Land / Plot">Land / Plot</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Contact Number</label>
+                        <input id="contactNumber" placeholder="e.g. 98765 43210">
+                    </div>
                 </div>
-                <div>
-                    <label>Preferred Date <span class="label-hint">(optional)</span></label>
-                    <input id="preferredDate" type="date">
+
+                <div class="form-grid-3">
+                    <div>
+                        <label>Owner / Client Name <span class="label-hint">(optional)</span></label>
+                        <input id="ownerName" placeholder="e.g. Ramesh Shah">
+                    </div>
+                    <div>
+                        <label>Urgency Level <span class="label-hint">(optional)</span></label>
+                        <select id="urgency">
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="URGENT">Urgent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Preferred Date <span class="label-hint">(optional)</span></label>
+                        <input id="preferredDate" type="date">
+                    </div>
                 </div>
             </div>
 
-            <div class="form-grid-3">
-                <div>
-                    <label>Rooms <span class="label-hint">(optional)</span></label>
-                    <input id="numRooms" type="number" min="0" placeholder="e.g. 4">
+            <!-- Section 2: Property Specifications -->
+            <div id="secSpecs" class="form-section-card">
+                <div class="form-section-header">
+                    <h3>2. Architectural Parameters</h3>
+                    <span class="section-badge">Dimensions</span>
                 </div>
-                <div>
-                    <label>Floors <span class="label-hint">(optional)</span></label>
-                    <input id="numFloors" type="number" min="1" placeholder="e.g. 2">
-                </div>
-                <div>
-                    <label>Area (sq ft) <span class="label-hint">(optional)</span></label>
-                    <input id="areaSqFt" type="number" min="0" placeholder="e.g. 1850">
-                </div>
-            </div>
-
-            <!-- Interactive Checklist for Inspector Findings -->
-            <div class="checklist-group">
-                <div class="checklist-title">
-                    <span>Initial Inspection Checklist Items</span>
-                    <span style="font-weight:400; font-size:11px;">Toggle standard checklist checkpoints</span>
-                </div>
-                <div class="checklist-items">
-                    <label class="check-pill"><input type="checkbox" value="Structural: OK" onchange="updateChecklistText()"> Structural Integrity</label>
-                    <label class="check-pill"><input type="checkbox" value="Electrical: Verified" onchange="updateChecklistText()"> Electrical & Wiring</label>
-                    <label class="check-pill"><input type="checkbox" value="Plumbing: Inspected" onchange="updateChecklistText()"> Plumbing & Water</label>
-                    <label class="check-pill"><input type="checkbox" value="Fire Safety: Compliant" onchange="updateChecklistText()"> Fire & Life Safety</label>
-                    <label class="check-pill"><input type="checkbox" value="HVAC: Operational" onchange="updateChecklistText()"> HVAC & Ventilation</label>
-                    <label class="check-pill"><input type="checkbox" value="Roofing: Weatherproof" onchange="updateChecklistText()"> Roofing & Exterior</label>
+                <div class="form-grid-3">
+                    <div>
+                        <label>Rooms <span class="label-hint">(optional)</span></label>
+                        <input id="numRooms" type="number" min="0" placeholder="e.g. 4">
+                    </div>
+                    <div>
+                        <label>Floors <span class="label-hint">(optional)</span></label>
+                        <input id="numFloors" type="number" min="1" placeholder="e.g. 2">
+                    </div>
+                    <div>
+                        <label>Area (sq ft) <span class="label-hint">(optional)</span></label>
+                        <input id="areaSqFt" type="number" min="0" placeholder="e.g. 1850">
+                    </div>
                 </div>
             </div>
 
-            <label>Checklist & Findings Summary <span class="label-hint">(optional)</span></label>
-            <input id="checklistSummary" placeholder="Auto-populated checklist items or custom audit summary...">
+            <!-- Section 3: Audit Findings & Evidence -->
+            <div id="secFindings" class="form-section-card">
+                <div class="form-section-header">
+                    <h3>3. Inspection Findings & Evidence</h3>
+                    <span class="section-badge">Checklist</span>
+                </div>
 
-            <label>Notes <span class="label-hint">(optional)</span></label>
-            <textarea id="notes" placeholder="Gate code, access hours, hazards, or instructions for the reviewer..."></textarea>
+                <!-- Interactive Checklist for Inspector Findings -->
+                <div class="checklist-group">
+                    <div class="checklist-title">
+                        <span>Standard Audit Checkpoints</span>
+                        <div class="checklist-presets">
+                            <button type="button" class="preset-btn" onclick="applyPresetChecklist('all-ok')">✓ Select All OK</button>
+                            <button type="button" class="preset-btn" onclick="applyPresetChecklist('clear')">Clear</button>
+                        </div>
+                    </div>
+                    <div class="checklist-items">
+                        <label class="check-pill"><input type="checkbox" value="Structural: OK" onchange="updateChecklistText()"> Structural Integrity</label>
+                        <label class="check-pill"><input type="checkbox" value="Electrical: Verified" onchange="updateChecklistText()"> Electrical & Wiring</label>
+                        <label class="check-pill"><input type="checkbox" value="Plumbing: Inspected" onchange="updateChecklistText()"> Plumbing & Water</label>
+                        <label class="check-pill"><input type="checkbox" value="Fire Safety: Compliant" onchange="updateChecklistText()"> Fire & Life Safety</label>
+                        <label class="check-pill"><input type="checkbox" value="HVAC: Operational" onchange="updateChecklistText()"> HVAC & Ventilation</label>
+                        <label class="check-pill"><input type="checkbox" value="Roofing: Weatherproof" onchange="updateChecklistText()"> Roofing & Exterior</label>
+                    </div>
+                </div>
 
+                <label>Checklist & Findings Summary <span class="label-hint">(optional)</span></label>
+                <input id="checklistSummary" placeholder="Auto-populated checklist items or custom audit summary...">
+
+                <label>Notes <span class="label-hint">(optional)</span></label>
+                <textarea id="notes" placeholder="Gate code, access hours, hazards, or instructions for the reviewer..."></textarea>
+
+                <!-- Mock Photo Dropzone & Evidence Preview -->
+                <div class="photo-dropzone" id="photoDropzone" onclick="document.getElementById('photoInput').click()">
+                    <div class="photo-drop-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>
+                    <div class="photo-drop-title">Attach Site Inspection Photos</div>
+                    <div class="photo-drop-hint">Click to browse or drop mock inspection photos (JPG, PNG)</div>
+                    <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+                    <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+                </div>
+            </div>
+
+            <!-- Primary Submit Button -->
             <button class="primary" onclick="submitRequest()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 Submit Request
@@ -1102,7 +1635,7 @@
                         Only show mine
                     </label>
 
-                    <select id="statusFilter" onchange="loadRequests()" style="width:auto; padding:6px 12px; font-size:13px; font-weight:500;">
+                    <select id="statusFilter" onchange="onStatusDropdownChange()" style="width:auto; padding:6px 12px; font-size:13px; font-weight:500;">
                         <option value="">All statuses</option>
                         <option value="SUBMITTED">Submitted</option>
                         <option value="UNDER_REVIEW">Under Review</option>
@@ -1114,6 +1647,15 @@
                 </div>
             </div>
 
+            <!-- Quick Status Filter Metric Tabs -->
+            <div class="status-filter-tabs" id="statusFilterTabs">
+                <button class="status-tab-btn active" onclick="setStatusTab('')">All <span class="tab-count" id="countAll">0</span></button>
+                <button class="status-tab-btn" onclick="setStatusTab('SUBMITTED')">Submitted <span class="tab-count" id="countSub">0</span></button>
+                <button class="status-tab-btn" onclick="setStatusTab('UNDER_REVIEW')">Under Review <span class="tab-count" id="countRev">0</span></button>
+                <button class="status-tab-btn" onclick="setStatusTab('APPROVED')">Approved <span class="tab-count" id="countApp">0</span></button>
+                <button class="status-tab-btn" onclick="setStatusTab('REJECTED')">Rejected <span class="tab-count" id="countRej">0</span></button>
+            </div>
+
             <div class="table-wrap">
                 <table id="tbl"></table>
             </div>
@@ -1121,7 +1663,7 @@
     </main>
 </div>
 
-<!-- Inspection Details Modal -->
+<!-- Inspection Details Modal & Printable Audit Certificate -->
 <div id="detailsModal" class="modal-backdrop hidden" onclick="if(event.target===this) closeDetailsModal()">
     <div class="modal-box">
         <div class="modal-header">
@@ -1129,17 +1671,64 @@
                 <h3 id="modalAddress">Property Inspection Details</h3>
                 <span id="modalBadge" class="badge"></span>
             </div>
-            <button class="modal-close" id="closeModalBtn" onclick="closeDetailsModal()">&times;</button>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="icon-btn" id="printCertBtn" onclick="printCertificate()" title="Print Certificate">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    Print
+                </button>
+                <button class="modal-close" id="closeModalBtn" onclick="closeDetailsModal()">&times;</button>
+            </div>
         </div>
+
+        <!-- Visual Stepper Progress Pipeline -->
+        <div class="status-stepper" id="modalStepper"></div>
+
         <div id="modalContent"></div>
+
+        <!-- Direct Actions Inside Details Modal for Reviewer/Admin -->
+        <div id="modalActionButtons"></div>
     </div>
 </div>
+
+<!-- Floating Chart Tooltip Element -->
+<div id="chartTooltip" class="chart-tooltip"></div>
 
 <script>
     let currentUser = null;
     let allRequestsCache = [];
+    let uploadedPhotos = [];
+    let currentOtpSession = null;
+
+    // Initialize Theme
+    function initTheme() {
+        const saved = localStorage.getItem('property_inspection_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', saved);
+        updateThemeIcon(saved);
+    }
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', cur);
+        localStorage.setItem('property_inspection_theme', cur);
+        updateThemeIcon(cur);
+        if(currentUser && currentUser.role === 'ADMIN') loadAnalytics();
+    }
+    function updateThemeIcon(theme) {
+        const icon = document.getElementById('themeIcon');
+        if(!icon) return;
+        if(theme === 'dark') {
+            icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+        } else {
+            icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+        }
+    }
+    initTheme();
 
     function showTab(tab){
+        cancelOtp();
         document.getElementById('loginTab').classList.toggle('hidden', tab !== 'login');
         document.getElementById('registerTab').classList.toggle('hidden', tab !== 'register');
         document.getElementById('loginTabBtn').classList.toggle('active', tab === 'login');
@@ -1154,14 +1743,23 @@
         </div>`;
     }
 
+    function showOtpMsg(text, type){
+        const container = document.getElementById('otpMsg');
+        if(!container) return;
+        container.innerHTML = `<div class="msg ${type}">
+            <span>${text}</span>
+        </div>`;
+    }
+
     async function register(){
         const username = document.getElementById('regUsername').value;
         const password = document.getElementById('regPassword').value;
         const role = document.getElementById('regRole').value;
+        const email = document.getElementById('regEmail')?.value || null;
         try {
             const res = await fetch('/api/users/register', {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password, role})
+                body: JSON.stringify({username, password, role, email})
             });
             if(res.ok){
                 showTab('login');
@@ -1177,26 +1775,116 @@
     async function login(){
         const username = document.getElementById('loginUsername').value;
         const password = document.getElementById('loginPassword').value;
+        const useOtp = document.getElementById('loginUseOtp')?.checked || false;
+
         try {
             const res = await fetch('/api/users/login', {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password})
+                body: JSON.stringify({username, password, useOtp})
             });
             if(!res.ok){ showMsg('Incorrect username or password.', 'error'); return; }
-            const user = await res.json();
-            if(!user.approved){ showMsg('Your account is registered but not yet approved by an admin.', 'error'); return; }
+            const data = await res.json();
 
-            currentUser = user;
-            document.getElementById('authView').classList.add('hidden');
-            document.getElementById('appView').classList.remove('hidden');
-            document.getElementById('whoami').textContent = user.username;
-            document.getElementById('roleLabel').textContent = user.role.replace('_',' ');
-            document.getElementById('userInitial').textContent = user.username.charAt(0).toUpperCase();
+            // Check if OTP 2FA is required
+            if (data.requiresOtp) {
+                currentOtpSession = {
+                    username: username,
+                    tempToken: data.tempToken,
+                    email: data.email
+                };
+                showOtpScreen(data);
+                return;
+            }
 
-            setupRoleDashboard(user);
+            // Standard direct login response
+            if(!data.approved){ showMsg('Your account is registered but not yet approved by an admin.', 'error'); return; }
+
+            completeLogin(data);
         } catch(e) {
             showMsg('Error connecting to the server.', 'error');
         }
+    }
+
+    function showOtpScreen(data) {
+        document.getElementById('loginTab').classList.add('hidden');
+        document.getElementById('registerTab').classList.add('hidden');
+        document.querySelector('.tab-switch').classList.add('hidden');
+        document.getElementById('otpStep').classList.remove('hidden');
+
+        document.getElementById('otpEmailTarget').textContent = data.email || 'your registered email';
+        const devBadge = document.getElementById('devOtpBadge');
+        if (devBadge && data.devOtp) {
+            devBadge.innerHTML = `<strong>Dev/Local Preview:</strong> Your 6-digit OTP is <code style="font-size:14px; font-weight:800; background:rgba(0,0,0,0.1); padding:2px 6px; border-radius:4px;">${data.devOtp}</code>`;
+            devBadge.classList.remove('hidden');
+        }
+        document.getElementById('otpCode').value = '';
+        document.getElementById('otpCode').focus();
+    }
+
+    function cancelOtp() {
+        currentOtpSession = null;
+        document.getElementById('otpStep')?.classList.add('hidden');
+        document.querySelector('.tab-switch')?.classList.remove('hidden');
+        document.getElementById('loginTab')?.classList.remove('hidden');
+        const otpMsg = document.getElementById('otpMsg');
+        if(otpMsg) otpMsg.innerHTML = '';
+    }
+
+    async function verifyOtp() {
+        if (!currentOtpSession) return;
+        const otp = document.getElementById('otpCode').value.trim();
+        if (!otp || otp.length < 6) {
+            showOtpMsg('Please enter the 6-digit verification code.', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/users/verify-otp', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ tempToken: currentOtpSession.tempToken, otp })
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                showOtpMsg(err.message || 'Invalid or expired OTP code.', 'error');
+                return;
+            }
+
+            const user = await res.json();
+            cancelOtp();
+            completeLogin(user);
+        } catch(e) {
+            showOtpMsg('Network error validating security code.', 'error');
+        }
+    }
+
+    async function resendOtp() {
+        if (!currentOtpSession) return;
+        try {
+            const res = await fetch('/api/users/resend-otp', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: currentOtpSession.username })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                currentOtpSession.tempToken = data.tempToken;
+                showOtpScreen(data);
+                showOtpMsg('A fresh verification code has been dispatched!', 'ok');
+            }
+        } catch(e) {
+            showOtpMsg('Could not resend code. Please try again.', 'error');
+        }
+    }
+
+    function completeLogin(user) {
+        currentUser = user;
+        document.getElementById('authView').classList.add('hidden');
+        document.getElementById('appView').classList.remove('hidden');
+        document.getElementById('whoami').textContent = user.username;
+        document.getElementById('roleLabel').textContent = user.role.replace('_',' ');
+        document.getElementById('userInitial').textContent = user.username.charAt(0).toUpperCase();
+
+        setupRoleDashboard(user);
     }
 
     function setupRoleDashboard(user){
@@ -1256,10 +1944,13 @@
     function logout(){
         currentUser = null;
         allRequestsCache = [];
+        uploadedPhotos = [];
+        currentOtpSession = null;
         document.getElementById('appView').classList.add('hidden');
         document.getElementById('authView').classList.remove('hidden');
         document.getElementById('loginUsername').value = '';
         document.getElementById('loginPassword').value = '';
+        cancelOtp();
         showMsg('', '');
     }
 
@@ -1275,6 +1966,7 @@
         tbl.innerHTML = rows;
     }
 
+    // Admin Pending Approvals with both Approve and Reject buttons
     async function loadPending(){
         const res = await fetch('/api/users/pending');
         const data = await res.json();
@@ -1283,16 +1975,26 @@
             tbl.innerHTML = '<tr><td class="empty">No pending approvals right now.</td></tr>';
             return;
         }
-        let rows = '<tr><th>Username</th><th>Requested Role</th><th></th></tr>';
+        let rows = '<tr><th>Username</th><th>Requested Role</th><th>Actions</th></tr>';
         data.forEach(u => {
             rows += `<tr><td>${u.username}</td><td>${u.role.replace('_',' ')}</td>
-      <td><button class="icon-btn approve" onclick="approveUser(${u.id})">Approve</button></td></tr>`;
+      <td>
+          <button class="icon-btn approve" onclick="approveUser(${u.id})">Approve</button>
+          <button class="icon-btn reject" onclick="rejectUser(${u.id})">Reject</button>
+      </td></tr>`;
         });
         tbl.innerHTML = rows;
     }
 
     async function approveUser(id){
         await fetch(`/api/users/${id}/approve`, {method: 'PUT'});
+        loadPending();
+        loadUsers();
+    }
+
+    async function rejectUser(id){
+        if(!confirm("Are you sure you want to decline/reject this user registration?")) return;
+        await fetch(`/api/users/${id}/reject`, {method: 'DELETE'});
         loadPending();
         loadUsers();
     }
@@ -1307,6 +2009,13 @@
 
         const totalPill = document.getElementById('totalRequestsPill');
         if(totalPill) totalPill.textContent = `${data.length} Total`;
+
+        // Update Status Filter Tabs counts
+        document.getElementById('countAll').textContent = data.length;
+        document.getElementById('countSub').textContent = counts.SUBMITTED;
+        document.getElementById('countRev').textContent = counts.UNDER_REVIEW;
+        document.getElementById('countApp').textContent = counts.APPROVED;
+        document.getElementById('countRej').textContent = counts.REJECTED;
     }
 
     async function loadAnalytics(){
@@ -1324,7 +2033,21 @@
         }
     }
 
-    // --- Inline SVG Charts Rendering ---
+    // --- Interactive Chart Tooltip Utility ---
+    function showChartTooltip(e, text) {
+        const tt = document.getElementById('chartTooltip');
+        if(!tt) return;
+        tt.textContent = text;
+        tt.style.left = e.pageX + 'px';
+        tt.style.top = e.pageY + 'px';
+        tt.style.opacity = '1';
+    }
+    function hideChartTooltip() {
+        const tt = document.getElementById('chartTooltip');
+        if(tt) tt.style.opacity = '0';
+    }
+
+    // --- Inline SVG Charts Rendering with Interactive Tooltips ---
     function renderStatusDonut(counts, total){
         const svgContainer = document.getElementById('statusChartSvg');
         const legend = document.getElementById('statusLegend');
@@ -1358,17 +2081,24 @@
             const strokeOffset = circumference - (accumulated * circumference);
 
             if(it.val > 0){
+                const tooltipMsg = `${it.label}: ${it.val} (${Math.round(pct * 100)}%)`;
                 circlesHtml += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${it.color}" stroke-width="22"
                     stroke-dasharray="${dashLength} ${circumference - dashLength}" stroke-dashoffset="${strokeOffset}"
-                    stroke-linecap="butt" transform="rotate(-90 ${cx} ${cy})"/>`;
+                    stroke-linecap="butt" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer; transition:stroke-width 0.15s ease;"
+                    onmouseenter="this.setAttribute('stroke-width','26'); showChartTooltip(event, '${tooltipMsg}')"
+                    onmouseleave="this.setAttribute('stroke-width','22'); hideChartTooltip()"/>`;
             }
             accumulated += pct;
         });
 
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const centerTextColor = isDark ? '#F1F5F9' : '#0F172A';
+        const bgCircleColor = isDark ? '#1E293B' : '#F1F5F9';
+
         svgContainer.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-            <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#F1F5F9" stroke-width="22"/>
+            <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${bgCircleColor}" stroke-width="22"/>
             ${circlesHtml}
-            <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="22" font-weight="800" fill="#0F172A">${total}</text>
+            <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="22" font-weight="800" fill="${centerTextColor}">${total}</text>
             <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" font-weight="700" fill="#64748B" letter-spacing="0.5">REQUESTS</text>
         </svg>`;
 
@@ -1393,18 +2123,23 @@
 
         const maxVal = Math.max(...entries.map(e => e[1]), 1);
         const barColors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EC4899'];
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const textColor = isDark ? '#E2E8F0' : '#475569';
+        const bgBar = isDark ? '#1E293B' : '#F1F5F9';
 
         let barsHtml = `<svg width="100%" height="${Math.max(entries.length * 40, 140)}" viewBox="0 0 340 ${entries.length * 40}">`;
         entries.forEach(([type, count], idx) => {
             const y = idx * 38 + 10;
             const barWidth = Math.max((count / maxVal) * 200, 8);
             const color = barColors[idx % barColors.length];
+            const msg = `${type}: ${count} properties`;
 
             barsHtml += `
-                <text x="10" y="${y + 14}" font-size="12" font-weight="600" fill="#475569">${type.substring(0, 14)}</text>
-                <rect x="110" y="${y}" width="200" height="20" rx="4" fill="#F1F5F9" />
-                <rect x="110" y="${y}" width="${barWidth}" height="20" rx="4" fill="${color}" />
-                <text x="${116 + barWidth}" y="${y + 15}" font-size="11" font-weight="700" fill="#1E293B">${count}</text>
+                <text x="10" y="${y + 14}" font-size="12" font-weight="600" fill="${textColor}">${type.substring(0, 14)}</text>
+                <rect x="110" y="${y}" width="200" height="20" rx="4" fill="${bgBar}" />
+                <rect x="110" y="${y}" width="${barWidth}" height="20" rx="4" fill="${color}" style="cursor:pointer;"
+                      onmouseenter="showChartTooltip(event, '${msg}')" onmouseleave="hideChartTooltip()" />
+                <text x="${116 + barWidth}" y="${y + 15}" font-size="11" font-weight="700" fill="${textColor}">${count}</text>
             `;
         });
         barsHtml += `</svg>`;
@@ -1440,16 +2175,20 @@
 
         let areaD = `${pathD} L ${points[points.length - 1].x} ${h - padY} L ${points[0].x} ${h - padY} Z`;
 
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const countColor = isDark ? '#F1F5F9' : '#1E293B';
+
         let circlesHtml = points.map(pt => `
-            <circle cx="${pt.x}" cy="${pt.y}" r="4.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="2"/>
-            <text x="${pt.x}" y="${pt.y - 8}" font-size="10" font-weight="700" fill="#1E293B" text-anchor="middle">${pt.count}</text>
+            <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#2563EB" stroke="#FFFFFF" stroke-width="2" style="cursor:pointer;"
+                    onmouseenter="showChartTooltip(event, '${pt.date}: ${pt.count} requests')" onmouseleave="hideChartTooltip()"/>
+            <text x="${pt.x}" y="${pt.y - 8}" font-size="10" font-weight="700" fill="${countColor}" text-anchor="middle">${pt.count}</text>
             <text x="${pt.x}" y="${h - 8}" font-size="9" fill="#94A3B8" text-anchor="middle">${pt.date ? pt.date.slice(5) : ''}</text>
         `).join('');
 
         container.innerHTML = `<svg width="100%" height="160" viewBox="0 0 ${w} ${h}">
             <defs>
                 <linearGradient id="timeGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.3"/>
+                    <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.35"/>
                     <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.0"/>
                 </linearGradient>
             </defs>
@@ -1477,13 +2216,17 @@
         const circumference = Math.PI * radius; // Half circle gauge
         const fillLength = (val / 100) * circumference;
 
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const centerColor = isDark ? '#F1F5F9' : '#0F172A';
+        const bgArcColor = isDark ? '#1E293B' : '#F1F5F9';
+
         container.innerHTML = `<svg width="${size}" height="120" viewBox="0 0 ${size} 120">
             <!-- Background arc -->
-            <path d="M 26 100 A 64 64 0 0 1 154 100" fill="none" stroke="#F1F5F9" stroke-width="${strokeW}" stroke-linecap="round"/>
+            <path d="M 26 100 A 64 64 0 0 1 154 100" fill="none" stroke="${bgArcColor}" stroke-width="${strokeW}" stroke-linecap="round"/>
             <!-- Gauge Progress Arc -->
             <path d="M 26 100 A 64 64 0 0 1 154 100" fill="none" stroke="#10B981" stroke-width="${strokeW}"
                   stroke-dasharray="${fillLength} ${circumference}" stroke-linecap="round"/>
-            <text x="${cx}" y="85" text-anchor="middle" font-size="28" font-weight="800" fill="#0F172A">${val}%</text>
+            <text x="${cx}" y="85" text-anchor="middle" font-size="28" font-weight="800" fill="${centerColor}">${val}%</text>
             <text x="${cx}" y="104" text-anchor="middle" font-size="10" font-weight="700" fill="#64748B" letter-spacing="0.5">APPROVAL RATE</text>
         </svg>`;
 
@@ -1491,6 +2234,30 @@
             <div class="legend-item"><span class="legend-color" style="background:#10B981"></span><span>Approved: <strong>${approved}</strong></span></div>
             <div class="legend-item"><span class="legend-color" style="background:#EF4444"></span><span>Rejected: <strong>${rejected}</strong></span></div>
         `;
+    }
+
+    // --- Status Filter Sync (Dropdown & Metric Tabs) ---
+    function onStatusDropdownChange() {
+        const val = document.getElementById('statusFilter').value;
+        updateStatusTabsUI(val);
+        loadRequests();
+    }
+
+    function setStatusTab(status) {
+        document.getElementById('statusFilter').value = status;
+        updateStatusTabsUI(status);
+        loadRequests();
+    }
+
+    function updateStatusTabsUI(status) {
+        document.querySelectorAll('.status-tab-btn').forEach(btn => {
+            const isTarget = (status === '' && btn.textContent.startsWith('All')) ||
+                             (status === 'SUBMITTED' && btn.textContent.startsWith('Submitted')) ||
+                             (status === 'UNDER_REVIEW' && btn.textContent.startsWith('Under Review')) ||
+                             (status === 'APPROVED' && btn.textContent.startsWith('Approved')) ||
+                             (status === 'REJECTED' && btn.textContent.startsWith('Rejected'));
+            btn.classList.toggle('active', isTarget);
+        });
     }
 
     // --- Inspection Requests Loading & Table Rendering ---
@@ -1501,7 +2268,14 @@
         let data = await res.json();
         allRequestsCache = data;
 
-        if(currentUser && currentUser.role === 'ADMIN') {
+        // Fetch full count for stats row & tab counters if filtered
+        if (filter) {
+            try {
+                const fullRes = await fetch('/api/inspections');
+                const fullData = await fullRes.json();
+                updateStats(fullData);
+            } catch(e) {}
+        } else {
             updateStats(data);
         }
 
@@ -1548,14 +2322,17 @@
             let actions = '';
             if(canReview){
                 if(r.status === 'SUBMITTED'){
-                    actions = `<td><button class="icon-btn" onclick="act(${r.id},'start-review')">Start Review</button></td>`;
+                    actions = `<td>
+                        <button class="icon-btn" onclick="act(${r.id},'start-review')">Start Review</button>
+                        <button class="icon-btn reject" onclick="act(${r.id},'reject')">Reject</button>
+                    </td>`;
                 } else if(r.status === 'UNDER_REVIEW'){
                     actions = `<td>
                         <button class="icon-btn approve" onclick="act(${r.id},'approve')">Approve</button>
                         <button class="icon-btn reject" onclick="act(${r.id},'reject')">Reject</button>
                     </td>`;
                 } else {
-                    actions = '<td></td>';
+                    actions = `<td><a class="view-details-link" href="javascript:void(0)" onclick="openDetailsModal(${r.id})">Details</a></td>`;
                 }
             } else if(isInspector) {
                 // CONTRACT: table #tbl must contain ZERO <button> elements for INSPECTOR
@@ -1571,9 +2348,11 @@
             rows += `<tr id="row-${r.id}">
                 <td>#${r.id}</td>
                 <td>
-                    <strong>${r.propertyAddress}</strong>
-                    ${urgencyHtml ? `&nbsp;${urgencyHtml}` : ''}
-                    ${r.contactNumber ? `<div class="remarks-note">${r.contactNumber}</div>` : ''}
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <strong>${r.propertyAddress}</strong>
+                        ${urgencyHtml}
+                    </div>
+                    ${r.contactNumber ? `<div class="remarks-note">Contact: ${r.contactNumber}</div>` : ''}
                 </td>
                 <td>${r.propertyType || '\u2014'}</td>
                 <td>${r.inspectorName}</td>
@@ -1599,10 +2378,70 @@
         if(currentUser && currentUser.role === 'ADMIN') loadAnalytics();
     }
 
+    async function actFromModal(id, action){
+        await act(id, action);
+        closeDetailsModal();
+    }
+
+    // --- Checklist Controls ---
     function updateChecklistText(){
         const checked = Array.from(document.querySelectorAll('.checklist-items input:checked'))
                              .map(cb => cb.value);
         document.getElementById('checklistSummary').value = checked.join('; ');
+    }
+
+    function applyPresetChecklist(preset) {
+        const checkboxes = document.querySelectorAll('.checklist-items input');
+        if (preset === 'all-ok') {
+            checkboxes.forEach(cb => cb.checked = true);
+        } else {
+            checkboxes.forEach(cb => cb.checked = false);
+        }
+        updateChecklistText();
+    }
+
+    function scrollToSection(secId) {
+        const el = document.getElementById(secId);
+        if(el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            document.querySelectorAll('.form-step-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            if (secId === 'secLocation') document.querySelectorAll('.form-step-pill')[0].classList.add('active');
+            if (secId === 'secSpecs') document.querySelectorAll('.form-step-pill')[1].classList.add('active');
+            if (secId === 'secFindings') document.querySelectorAll('.form-step-pill')[2].classList.add('active');
+        }
+    }
+
+    // --- Photo Upload Mock Previews ---
+    function handlePhotoUpload(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(f => {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                uploadedPhotos.push({ name: f.name, data: evt.target.result });
+                renderPhotoPreviews();
+            };
+            reader.readAsDataURL(f);
+        });
+    }
+
+    function renderPhotoPreviews() {
+        const grid = document.getElementById('photoPreviewGrid');
+        if(!grid) return;
+        grid.innerHTML = uploadedPhotos.map((p, idx) => `
+            <div class="photo-preview-item" title="${p.name}">
+                <img src="${p.data}" alt="${p.name}">
+                <div class="photo-preview-tag">${p.name}</div>
+                <button type="button" class="photo-remove-btn" onclick="removePhoto(${idx}, event)">&times;</button>
+            </div>
+        `).join('');
+    }
+
+    function removePhoto(idx, evt) {
+        evt.stopPropagation();
+        uploadedPhotos.splice(idx, 1);
+        renderPhotoPreviews();
     }
 
     async function submitRequest(){
@@ -1644,12 +2483,14 @@
         document.getElementById('areaSqFt').value = '';
         document.getElementById('checklistSummary').value = '';
         document.querySelectorAll('.checklist-items input').forEach(cb => cb.checked = false);
+        uploadedPhotos = [];
+        renderPhotoPreviews();
 
         loadRequests();
         if(currentUser && currentUser.role === 'ADMIN') loadAnalytics();
     }
 
-    // Modal Details Viewer
+    // Modal Details & Status Pipeline Stepper Viewer
     function openDetailsModal(id){
         const r = allRequestsCache.find(item => item.id === id);
         if(!r) return;
@@ -1658,6 +2499,45 @@
         const badge = document.getElementById('modalBadge');
         badge.className = `badge ${r.status}`;
         badge.textContent = r.status === 'UNDER_REVIEW' ? 'UNDER REVIEW' : r.status;
+
+        // Visual Stepper Pipeline Generation
+        const stepper = document.getElementById('modalStepper');
+        let step1Class = 'step-node completed';
+        let step2Class = 'step-node';
+        let step3Class = 'step-node';
+        let step3Label = 'Decision';
+
+        if(r.status === 'SUBMITTED') {
+            step1Class = 'step-node active';
+        } else if(r.status === 'UNDER_REVIEW') {
+            step1Class = 'step-node completed';
+            step2Class = 'step-node active';
+        } else if(r.status === 'APPROVED') {
+            step1Class = 'step-node completed';
+            step2Class = 'step-node completed';
+            step3Class = 'step-node completed';
+            step3Label = 'Approved';
+        } else if(r.status === 'REJECTED') {
+            step1Class = 'step-node completed';
+            step2Class = 'step-node completed';
+            step3Class = 'step-node rejected';
+            step3Label = 'Rejected';
+        }
+
+        stepper.innerHTML = `
+            <div class="${step1Class}">
+                <div class="step-circle">1</div>
+                <div class="step-label">Submitted</div>
+            </div>
+            <div class="${step2Class}">
+                <div class="step-circle">2</div>
+                <div class="step-label">Under Review</div>
+            </div>
+            <div class="${step3Class}">
+                <div class="step-circle">3</div>
+                <div class="step-label">${step3Label}</div>
+            </div>
+        `;
 
         const content = document.getElementById('modalContent');
         content.innerHTML = `
@@ -1675,11 +2555,36 @@
             <div class="detail-row"><span class="detail-label">Reviewer Remarks:</span><span class="detail-val">${r.reviewerRemarks ? '<strong>' + r.reviewerRemarks + '</strong>' : '\u2014'}</span></div>
         `;
 
+        // Direct Actions for Reviewer/Admin in Modal
+        const actionBox = document.getElementById('modalActionButtons');
+        const canReview = currentUser && (currentUser.role === 'REVIEWER' || currentUser.role === 'ADMIN');
+        if (canReview && r.status === 'UNDER_REVIEW') {
+            actionBox.innerHTML = `
+                <div style="display:flex; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                    <button class="icon-btn approve" style="flex:1; justify-content:center;" onclick="actFromModal(${r.id},'approve')">✓ Approve Request</button>
+                    <button class="icon-btn reject" style="flex:1; justify-content:center;" onclick="actFromModal(${r.id},'reject')">✕ Reject Request</button>
+                </div>
+            `;
+        } else if (canReview && r.status === 'SUBMITTED') {
+            actionBox.innerHTML = `
+                <div style="display:flex; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                    <button class="icon-btn" style="flex:1; justify-content:center;" onclick="actFromModal(${r.id},'start-review')">Start Review</button>
+                    <button class="icon-btn reject" style="flex:1; justify-content:center;" onclick="actFromModal(${r.id},'reject')">✕ Reject Request</button>
+                </div>
+            `;
+        } else {
+            actionBox.innerHTML = '';
+        }
+
         document.getElementById('detailsModal').classList.remove('hidden');
     }
 
     function closeDetailsModal(){
         document.getElementById('detailsModal').classList.add('hidden');
+    }
+
+    function printCertificate(){
+        window.print();
     }
 </script>
 </body>

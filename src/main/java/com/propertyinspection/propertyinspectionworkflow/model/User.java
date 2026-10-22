@@ -23,6 +23,8 @@ public class User {
 
     private boolean approved = false;
 
+    private String email;
+
     public enum Role {
         INSPECTOR, REVIEWER, PROPERTY_OWNER, ADMIN
     }
@@ -37,4 +39,6 @@ public class User {
     public void setRole(Role role) { this.role = role; }
     public boolean isApproved() { return approved; }
     public void setApproved(boolean approved) { this.approved = approved; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }
