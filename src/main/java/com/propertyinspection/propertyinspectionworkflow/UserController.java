@@ -68,12 +68,12 @@ public class UserController {
     public ResponseEntity<?> verifyOtp(@RequestBody Map<String, String> body) {
         String tempToken = body.get("tempToken");
         String otp = body.get("otp");
-        boolean valid = otpService.verifyOtp(tempToken, otp);
-        if (!valid) {
+        String username = otpService.verifyOtpAndGetUsername(tempToken, otp);
+        if (username == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "Invalid or expired OTP code. Please check and try again."));
         }
-        String username = otpService.getUsernameForToken(tempToken);
-        User user = repository.findByUsername(username).orElseThrow();
+        User user = repository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         return ResponseEntity.ok(user);
     }
 

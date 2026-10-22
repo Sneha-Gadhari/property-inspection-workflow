@@ -66,28 +66,33 @@ public class OtpService {
         return resp;
     }
 
-    public boolean verifyOtp(String tempToken, String enteredOtp) {
-        if (tempToken == null || enteredOtp == null) return false;
+    public String verifyOtpAndGetUsername(String tempToken, String enteredOtp) {
+        if (tempToken == null || enteredOtp == null) return null;
         OtpSession session = sessions.get(tempToken);
-        if (session == null) return false;
+        if (session == null) return null;
 
         if (System.currentTimeMillis() > session.getExpiryTime()) {
             sessions.remove(tempToken);
-            return false;
+            return null;
         }
 
         if (session.getAttempts() >= MAX_ATTEMPTS) {
             sessions.remove(tempToken);
-            return false;
+            return null;
         }
         session.incrementAttempts();
 
         boolean match = session.getOtpCode().equals(enteredOtp.trim());
         if (match) {
+            String username = session.getUsername();
             sessions.remove(tempToken);
-            return true;
+            return username;
         }
-        return false;
+        return null;
+    }
+
+    public boolean verifyOtp(String tempToken, String enteredOtp) {
+        return verifyOtpAndGetUsername(tempToken, enteredOtp) != null;
     }
 
     public String getUsernameForToken(String tempToken) {

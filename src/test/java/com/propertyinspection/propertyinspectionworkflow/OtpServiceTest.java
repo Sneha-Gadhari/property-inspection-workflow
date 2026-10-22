@@ -60,6 +60,13 @@ class OtpServiceTest {
         // Cannot replay token once verified
         boolean replay = otpService.verifyOtp(token, code);
         assertFalse(replay);
+
+        // verifyOtpAndGetUsername returns username and invalidates token
+        Map<String, Object> resp2 = otpService.initiateOtp(user);
+        String token2 = resp2.get("tempToken").toString();
+        String code2 = resp2.get("devOtp").toString();
+        String verifiedUsername = otpService.verifyOtpAndGetUsername(token2, code2);
+        assertEquals("john_reviewer", verifiedUsername);
     }
 
     @Test
