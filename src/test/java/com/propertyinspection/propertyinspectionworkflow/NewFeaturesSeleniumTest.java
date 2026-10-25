@@ -57,4 +57,40 @@ class NewFeaturesSeleniumTest extends BaseSeleniumTest {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#statusChartSvg svg")));
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#propertyTypeChartSvg svg")));
     }
+
+    @Test
+    void propertyOwnerCanSubmitInspectionRequestAndTrackStatus() throws Exception {
+        String owner = "owner_" + uniqueSuffix();
+        createApprovedUser(owner, "pass123", "PROPERTY_OWNER");
+        String address = "Villa 42, Palm Meadows " + uniqueSuffix();
+
+        login(owner, "pass123");
+        waitForDashboard();
+
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("heroTitle"), "Property Owner Portal"));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("roleLabel"), "PROPERTY OWNER"));
+
+        // Property owner can submit a request
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("address")));
+        driver.findElement(By.id("address")).clear();
+        driver.findElement(By.id("address")).sendKeys(address);
+        new Select(driver.findElement(By.id("propertyType"))).selectByVisibleText("Residential");
+        driver.findElement(By.id("numRooms")).sendKeys("5");
+        driver.findElement(By.id("areaSqFt")).sendKeys("3200");
+        driver.findElement(By.id("notes")).sendKeys("Pre-possession inspection requested.");
+
+        driver.findElement(By.cssSelector("#submitCard button.primary")).click();
+
+        By badge = By.xpath(row("tbl", address) + "//span[contains(@class,'badge')]");
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(badge, "SUBMITTED"));
+
+        // Inspector is displayed as Unassigned for owner-created requests
+        assertTrue(driver.findElement(By.xpath(row("tbl", address))).getText().contains("Unassigned"));
+
+        // Open details modal
+        driver.findElement(By.xpath(row("tbl", address) + "//a[contains(@class,'view-details-link')]")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("detailsModal")));
+        assertTrue(driver.findElement(By.id("modalAddress")).getText().contains(address));
+        assertTrue(driver.findElement(By.id("modalContent")).getText().contains("3200 sq ft"));
+    }
 }

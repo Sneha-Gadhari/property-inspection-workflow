@@ -36,3 +36,7 @@ whitepaper_render/
 Property_Inspection_DevOps_White_Paper.docx
 whitepaper_render/
 Project documentation/
+.env
+.env.*
+*.env
+run-app.ps1

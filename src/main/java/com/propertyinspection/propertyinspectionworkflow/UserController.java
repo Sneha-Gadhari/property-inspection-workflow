@@ -114,4 +114,11 @@ public class UserController {
     public List<User> getAll() {
         return repository.findAll();
     }
+
+    @GetMapping("/inspectors")
+    public List<User> getInspectors() {
+        return repository.findAll().stream()
+                .filter(u -> u.getRole() == User.Role.INSPECTOR && u.isApproved())
+                .toList();
+    }
 }
