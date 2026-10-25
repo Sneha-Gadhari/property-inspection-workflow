@@ -67,34 +67,20 @@ public class PropertyInspectionWorkflowApplication {
 				userRepository.save(reviewer);
 			}
 
-			// 4. Seed Indian Property Owners
-			if (userRepository.findByUsername("priya_owner").isEmpty()) {
+			// 4. Seed Indian Property Owner
+			if (userRepository.findByUsername("sneha_owner").isEmpty()) {
 				User owner = new User();
-				owner.setUsername("priya_owner");
+				owner.setUsername("sneha_owner");
 				owner.setPassword("pass123");
 				owner.setRole(User.Role.PROPERTY_OWNER);
 				owner.setApproved(true);
-				owner.setFullName("Priya Deshmukh");
-				owner.setPhone("+91 97654 32109");
-				owner.setDob("1991-03-18");
-				owner.setAge(35);
-				owner.setAddress("Hinjewadi Phase 1, Pune, Maharashtra");
+				owner.setEmail("snehag1795@gmail.com");
+				owner.setFullName("Sneha Gadhari");
+				owner.setPhone("+91 98220 99887");
+				owner.setDob("1995-07-17");
+				owner.setAge(31);
+				owner.setAddress("Amanora Gateway Towers, Hadapsar, Pune");
 				userRepository.save(owner);
-			}
-
-			if (userRepository.findByUsername("sneha_owner").isEmpty()) {
-				User owner2 = new User();
-				owner2.setUsername("sneha_owner");
-				owner2.setPassword("pass123");
-				owner2.setRole(User.Role.PROPERTY_OWNER);
-				owner2.setApproved(true);
-				owner2.setEmail("snehag1795@gmail.com");
-				owner2.setFullName("Sneha Gadhari");
-				owner2.setPhone("+91 98220 99887");
-				owner2.setDob("1995-07-17");
-				owner2.setAge(31);
-				owner2.setAddress("Amanora Gateway Towers, Hadapsar, Pune");
-				userRepository.save(owner2);
 			}
 
 			// 5. Seed Rich Indian Dummy Inspection Data for Analytics & Live Demos
@@ -131,13 +117,13 @@ public class PropertyInspectionWorkflowApplication {
 						now.minusDays(2)
 				));
 
-				// Dummy 3: Submitted Residential - Hinjewadi (Owned by Priya Deshmukh / priya_owner)
+				// Dummy 3: Submitted Residential - Hinjewadi (Owned by Sneha Gadhari / sneha_owner)
 				inspectionRepo.save(createInspection(
 						"Flat 1202, Royal Palms Residency, Hinjewadi Phase 1, Pune",
 						"rahul_inspector",
-						"Priya Deshmukh (priya_owner)",
+						"Sneha Gadhari (sneha_owner)",
 						"Residential",
-						"+91 97654 32109",
+						"+91 98220 99887",
 						"MEDIUM", 4, 1, 1650.0, "2026-10-24",
 						"Plumbing & Drainage: Clear | Balcony Railings: Sturdy | MCB Distribution Box: All phases active",
 						"3BHK high-rise apartment pre-possession audit. Balcony railing height and electrical earth leakage check.",

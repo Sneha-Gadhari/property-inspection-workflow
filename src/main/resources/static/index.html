@@ -1507,12 +1507,8 @@
                     <span>⚖️ <strong>Reviewer:</strong> <code>priya_reviewer</code> / <code>pass123</code></span>
                     <a href="javascript:void(0)" onclick="fillCredentials('priya_reviewer','pass123')" style="color:var(--brand-primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:4px; background:var(--card-bg); border:1px solid var(--border-color);">Auto-Fill</a>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                    <span>🏡 <strong>Owner (Priya):</strong> <code>priya_owner</code> / <code>pass123</code></span>
-                    <a href="javascript:void(0)" onclick="fillCredentials('priya_owner','pass123')" style="color:var(--brand-primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:4px; background:var(--card-bg); border:1px solid var(--border-color);">Auto-Fill</a>
-                </div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>🏡 <strong>Owner (Sneha):</strong> <code>sneha_owner</code> / <code>pass123</code></span>
+                    <span>🏡 <strong>Property Owner:</strong> <code>sneha_owner</code> / <code>pass123</code></span>
                     <a href="javascript:void(0)" onclick="fillCredentials('sneha_owner','pass123')" style="color:var(--brand-primary); font-weight:700; text-decoration:none; padding:1px 6px; border-radius:4px; background:var(--card-bg); border:1px solid var(--border-color);">Auto-Fill</a>
                 </div>
             </div>
@@ -2270,7 +2266,7 @@
         </label>
 
         <label style="margin-top:12px;">Type Full Name to E-Sign <span style="color:var(--red)">*</span></label>
-        <input id="agreementSignatureInput" placeholder="e.g. Priya Deshmukh" style="font-family:'Brush Script MT', cursive; font-size:18px;">
+        <input id="agreementSignatureInput" placeholder="e.g. Sneha Gadhari" style="font-family:'Brush Script MT', cursive; font-size:18px;">
 
         <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
             <button type="button" class="icon-btn" onclick="closeAgreementModal()">Cancel</button>
@@ -2379,17 +2375,7 @@
         }
 
         let defaultList = [];
-        if(user.username === 'priya_owner'){
-            defaultList = [
-                {
-                    address: "Flat 1202, Royal Palms Residency, Hinjewadi Phase 1, Pune",
-                    type: "Residential",
-                    contact: "+91 97654 32109",
-                    owner: "Priya Deshmukh",
-                    rooms: 4, floors: 1, area: 1650
-                }
-            ];
-        } else if(user.username === 'sneha_owner'){
+        if(user.username === 'sneha_owner'){
             defaultList = [
                 {
                     address: "Penthouse 1801, Amanora Gateway Towers, Hadapsar, Pune",
@@ -2397,6 +2383,13 @@
                     contact: "+91 98220 99887",
                     owner: "Sneha Gadhari",
                     rooms: 5, floors: 2, area: 2850
+                },
+                {
+                    address: "Flat 1202, Royal Palms Residency, Hinjewadi Phase 1, Pune",
+                    type: "Residential",
+                    contact: "+91 98220 99887",
+                    owner: "Sneha Gadhari",
+                    rooms: 4, floors: 1, area: 1650
                 }
             ];
         }
@@ -2639,14 +2632,11 @@
             if(onlyMineWrap) onlyMineWrap.style.display = 'none';
 
             // Auto-fill owner details
-            if(user.username === 'priya_owner') {
-                document.getElementById('ownerName').value = 'Priya Deshmukh';
-                document.getElementById('contactNumber').value = '+91 97654 32109';
-            } else if(user.username === 'sneha_owner') {
+            if(user.username === 'sneha_owner') {
                 document.getElementById('ownerName').value = 'Sneha Gadhari';
                 document.getElementById('contactNumber').value = '+91 98220 99887';
             } else {
-                document.getElementById('ownerName').value = user.username;
+                document.getElementById('ownerName').value = user.fullName || user.username;
             }
             setupSavedPropertiesForOwner(user);
         }
@@ -3282,9 +3272,8 @@
         if(currentUser.role === 'PROPERTY_OWNER'){
             inspName = 'Unassigned';
             if(!ownName) {
-                if(currentUser.username === 'priya_owner') ownName = 'Priya Deshmukh';
-                else if(currentUser.username === 'sneha_owner') ownName = 'Sneha Gadhari';
-                else ownName = currentUser.username;
+                if(currentUser.username === 'sneha_owner') ownName = 'Sneha Gadhari';
+                else ownName = currentUser.fullName || currentUser.username;
             }
             if(!ownName.toLowerCase().includes(currentUser.username.toLowerCase())) {
                 ownName = `${ownName} (${currentUser.username})`;
