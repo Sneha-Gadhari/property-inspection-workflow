@@ -1957,6 +1957,7 @@
 
         <!-- Direct Actions Inside Details Modal for Reviewer/Admin -->
         <div id="modalActionButtons"></div>
+    </div>
 </div>
 
 <!-- Reviewer & Coordinator: Review & Inspector Assignment Modal -->
@@ -3183,12 +3184,15 @@
         if(action === 'approve' || action === 'reject'){
             remarks = window.prompt(`Add a remark for this ${action === 'approve' ? 'approval' : 'rejection'} (optional):`, '') || '';
         }
-        await fetch(`/api/inspections/${id}/${action}`, {
+        const res = await fetch(`/api/inspections/${id}/${action}`, {
             method: 'PUT', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({remarks})
         });
-        loadRequests();
+        await loadRequests();
         if(currentUser && currentUser.role === 'ADMIN') loadAnalytics();
+        if(action === 'approve' && res.ok){
+            openCertificateModal(id);
+        }
     }
 
     async function actFromModal(id, action){
@@ -3326,8 +3330,14 @@
     }
 
     // Modal Details & Status Pipeline Stepper Viewer
-    function openDetailsModal(id){
-        const r = allRequestsCache.find(item => item.id === id);
+    async function openDetailsModal(id){
+        let r = allRequestsCache.find(item => String(item.id) === String(id));
+        if(!r) {
+            try {
+                const res = await fetch('/api/inspections/' + id);
+                if (res.ok) r = await res.json();
+            } catch(e) {}
+        }
         if(!r) return;
 
         document.getElementById('modalAddress').textContent = r.propertyAddress;
@@ -3440,6 +3450,14 @@
                     <button class="icon-btn reject" style="flex:1; justify-content:center;" onclick="actFromModal(${r.id},'reject')">✕ Reject Request</button>
                 </div>
             `;
+        } else if (r.status === 'APPROVED') {
+            actionBox.innerHTML = `
+                <div style="display:flex; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                    <button type="button" class="primary" style="flex:1; justify-content:center; background:var(--green); border-color:var(--green); font-weight:700;" onclick="closeDetailsModal(); openCertificateModal(${r.id});">
+                        🎖️ View Official Clearance Certificate
+                    </button>
+                </div>
+            `;
         } else {
             actionBox.innerHTML = '';
         }
@@ -3512,7 +3530,13 @@
     // --- Reviewer Desk: Review & Assign Modal Handlers ---
     async function openReviewModal(id) {
         currentReviewId = id;
-        const r = allRequestsCache.find(x => x.id === id);
+        let r = allRequestsCache.find(x => String(x.id) === String(id));
+        if (!r) {
+            try {
+                const res = await fetch('/api/inspections/' + id);
+                if (res.ok) r = await res.json();
+            } catch(e) {}
+        }
         if (!r) return;
 
         const brief = document.getElementById('reviewPropertyBrief');
@@ -3595,9 +3619,15 @@
     }
 
     // --- Field Inspector: On-Site Audit Modal Handlers ---
-    function openConductAuditModal(id) {
+    async function openConductAuditModal(id) {
         currentAuditId = id;
-        const r = allRequestsCache.find(x => x.id === id);
+        let r = allRequestsCache.find(x => String(x.id) === String(id));
+        if (!r) {
+            try {
+                const res = await fetch('/api/inspections/' + id);
+                if (res.ok) r = await res.json();
+            } catch(e) {}
+        }
         if (!r) return;
 
         document.getElementById('auditModalTitle').textContent = `Field Audit: #${r.id} - ${r.propertyAddress}`;
@@ -3822,12 +3852,29 @@
     }
 
     // --- Official Clearance Certificate Modal ---
-    function openCertificateModal(id) {
-        const r = allRequestsCache.find(x => x.id === id);
-        if (!r) return;
+    async function openCertificateModal(id) {
+        let r = allRequestsCache.find(x => String(x.id) === String(id));
+        if (!r) {
+            try {
+                const res = await fetch('/api/inspections/' + id);
+                if (res.ok) r = await res.json();
+            } catch(e) {}
+        }
+        if (!r) {
+            console.error('Inspection record not found for certificate id:', id);
+            return;
+        }
 
         const certNum = `CERT-2026-IND-${String(r.id).padStart(5, '0')}`;
         const inspectionDate = r.scheduledDate || r.preferredDate || new Date().toISOString().split('T')[0];
+
+        const reviewerSignName = currentUser && (currentUser.role === 'REVIEWER' || currentUser.role === 'ADMIN')
+            ? (currentUser.fullName || currentUser.username)
+            : 'Priya Deshmukh';
+
+        const inspectorSignName = r.inspectorName && r.inspectorName !== 'Unassigned'
+            ? r.inspectorName
+            : 'Rahul Verma, CMI';
 
         const container = document.getElementById('certificateContainer');
         container.innerHTML = `
@@ -3885,13 +3932,13 @@
 
             <div class="cert-signatures">
                 <div class="sig-block">
-                    <div class="sig-line">Rahul Verma</div>
-                    <div style="font-weight:700; font-size:12px;">Rahul Verma, CMI</div>
+                    <div class="sig-line">${inspectorSignName}</div>
+                    <div style="font-weight:700; font-size:12px;">${inspectorSignName}</div>
                     <div style="font-size:10px; color:var(--muted);">Lead Field Auditor &middot; Lic: INSP-MH-2022-8819</div>
                 </div>
                 <div class="sig-block">
-                    <div class="sig-line">Priya Deshmukh</div>
-                    <div style="font-weight:700; font-size:12px;">Priya Deshmukh</div>
+                    <div class="sig-line">${reviewerSignName}</div>
+                    <div style="font-weight:700; font-size:12px;">${reviewerSignName}</div>
                     <div style="font-size:10px; color:var(--muted);">Municipal Chief Review Officer &middot; Desk 4</div>
                 </div>
             </div>
@@ -3905,9 +3952,15 @@
     }
 
     // --- Pre-Inspection Agreement Modal ---
-    function openAgreementModal(id) {
+    async function openAgreementModal(id) {
         currentAgreementId = id;
-        const r = allRequestsCache.find(x => x.id === id);
+        let r = allRequestsCache.find(x => String(x.id) === String(id));
+        if (!r) {
+            try {
+                const res = await fetch('/api/inspections/' + id);
+                if (res.ok) r = await res.json();
+            } catch(e) {}
+        }
         if (!r) return;
         document.getElementById('agreementSignatureInput').value = r.ownerName ? r.ownerName.split('(')[0].trim() : (currentUser?.fullName || currentUser?.username);
         document.getElementById('agreementModal').classList.remove('hidden');
@@ -3934,9 +3987,15 @@
     }
 
     // --- Invoice Modal ---
-    function openInvoiceModal(id) {
+    async function openInvoiceModal(id) {
         currentInvoiceId = id;
-        const r = allRequestsCache.find(x => x.id === id);
+        let r = allRequestsCache.find(x => String(x.id) === String(id));
+        if (!r) {
+            try {
+                const res = await fetch('/api/inspections/' + id);
+                if (res.ok) r = await res.json();
+            } catch(e) {}
+        }
         if (!r) return;
 
         const isPaid = r.paymentStatus === 'PAID';
