@@ -8,14 +8,14 @@
 [![Ansible](https://img.shields.io/badge/Provisioning-Ansible-black.svg)](https://www.ansible.com/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
 
-An enterprise-grade, cloud-native **Property Inspection & Compliance Workflow System** developed as a full-lifecycle DevOps capstone. The platform completely digitizes real-estate and municipal inspection operations—from initial intake and desk review, to on-site field audits, defect cost estimation, legal agreements, billing, and official compliance certification—backed by an automated continuous integration, testing, containerization, and configuration management pipeline.
+A full-stack **Property Inspection & Compliance Workflow System** developed as a full-lifecycle DevOps capstone. The platform completely digitizes real-estate and municipal inspection operations—from initial intake and desk review, to on-site field audits, defect cost estimation, legal agreements, billing, and official compliance certification—backed by an automated continuous integration, testing, containerization, and configuration management pipeline.
 
 ---
 
 ## Table of Contents
 - [Key Features](#key-features)
   - [1. Role-Based Access Control (RBAC)](#1-role-based-access-control-rbac)
-  - [2. Enterprise Authentication & Two-Factor Authentication (2FA)](#2-enterprise-authentication--two-factor-authentication-2fa)
+  - [2. User Authentication & Two-Factor Authentication (2FA)](#2-user-authentication--two-factor-authentication-2fa)
   - [3. End-to-End Property Inspection Lifecycle](#3-end-to-end-property-inspection-lifecycle)
   - [4. On-Site Field Audit & Defect Cost Estimator](#4-on-site-field-audit--defect-cost-estimator)
   - [5. Executive Analytics & Dynamic SVG Charts](#5-executive-analytics--dynamic-svg-charts)
@@ -30,19 +30,21 @@ An enterprise-grade, cloud-native **Property Inspection & Compliance Workflow Sy
 - [Docker & Container Deployment](#docker--container-deployment)
 - [Configuration Management with Ansible](#configuration-management-with-ansible)
 - [Repository Structure](#repository-structure)
+- [Known Limitations](#known-limitations)
+- [License](#license)
 
 ---
 
 ## Key Features
 
 ### 1. Role-Based Access Control (RBAC)
-The application enforces strict persona separation across four specialized enterprise roles:
+The interface has four roles:
 - **System Administrator (`ADMIN`)**: Full governance oversight, pending user approval/rejection queue, inspector and user directory, macro analytics, and global audit supervision.
 - **Certified Field Inspector (`INSPECTOR`)**: Dedicated field dashboard, detailed structural and systems audit checklist, defect logging with cost estimation, photographic evidence upload, and digital license sign-off.
 - **Municipal / Agency Reviewer (`REVIEWER`)**: Queue triage, desk review initiation, inspector assignment with scheduled dates and fee quotas, audit review, and formal compliance approval or deficiency notice issuance.
 - **Property Owner (`PROPERTY_OWNER`)**: Self-service intake portal, property order placement, saved address quick-fill, pre-inspection legal agreement execution, mock payment checkout, status tracking, and service feedback.
 
-### 2. Enterprise Authentication & Two-Factor Authentication (2FA)
+### 2. User Authentication & Two-Factor Authentication (2FA)
 - **Administrative Approval Gate**: Self-registered users are placed in a pending verification queue (`approved = false`) until vetted and approved by an Administrator.
 - **Two-Factor Authentication (2FA)**: Optional 6-digit Time/Session-based OTP dispatch via SMTP (`JavaMailSender`) to the user's registered email address.
 - **Security Safeguards**: OTP validity expiration (5 minutes), attempt rate limiting (max 5 attempts), token-bound verification, email masking, and developer demo credentials fallback.
@@ -52,7 +54,7 @@ The application enforces strict persona separation across four specialized enter
   $$\text{SUBMITTED} \longrightarrow \text{UNDER\_REVIEW} \longrightarrow \begin{cases} \text{APPROVED} \\ \text{REJECTED} \end{cases}$$
 - **Intake & Submission**: Captures property address, property classification (*Residential, Commercial, Industrial, Mixed-Use*), contact details, owner name, urgency (*LOW, MEDIUM, HIGH, CRITICAL*), structural specifications (rooms, floors, square footage, year built), pre-inspection notes, and multi-photo upload with interactive thumbnail previews.
 - **Desk Review & Assignment**: Reviewers evaluate intake data, assign certified inspectors from the active roster, specify scheduled inspection dates, configure inspection fees, and append reviewer guidelines.
-- **Tamper-Evident Audit Trail**: Every status transition, assignment, inspection audit, agreement signing, payment, and remark is recorded in a chronological, append-only JSON audit trail with timestamps and actor identities.
+- **Append-only audit trail**: Every status transition, assignment, inspection audit, agreement signing, payment, and remark is recorded in a chronological, append-only JSON audit trail with timestamps and actor identities.
 
 ### 4. On-Site Field Audit & Defect Cost Estimator
 - **Multi-System Inspection Checklist**: Standardized checks across seven primary building domains:
@@ -92,7 +94,7 @@ Built-in, zero-dependency SVG visualization engine delivering real-time data ins
 
 ## Pre-Seeded Demo Accounts
 
-The application automatically seeds realistic enterprise users and sample inspection orders on startup for immediate demonstration and testing:
+The application automatically seeds sample demo users and inspection orders on startup for immediate demonstration and testing:
 
 | Username | Password | Role | Full Name / Description | Default Permissions |
 |:---|:---|:---|:---|:---|
@@ -180,7 +182,7 @@ flowchart LR
 | `POST` | `/api/users/login` | Authenticate with username and password | JSON with `username`, `password`, optional `useOtp` flag |
 | `POST` | `/api/users/verify-otp` | Verify 6-digit two-factor authentication code | JSON with `tempToken` and `otp` |
 | `POST` | `/api/users/resend-otp` | Request a fresh OTP code dispatch | JSON with `username` |
-| `GET` | `/api/users/pending` | List pending user registration requests | Admin authorization |
+| `GET` | `/api/users/pending` | List pending user registration requests | None |
 | `PUT` | `/api/users/{id}/approve` | Approve a pending user account | Path variable `id` |
 | `PUT` / `DELETE`| `/api/users/{id}/reject` | Reject and remove a registration request | Path variable `id` |
 | `GET` | `/api/users` | List all registered users | None |
@@ -289,7 +291,7 @@ property-inspection-workflow/
 ├── .mvn/                                # Maven wrapper configuration
 ├── ansible/                             # Ansible configuration management
 │   ├── inventory.ini                    # Inventory definition
-│   ├── release.yml                      # Blue-green container release playbook
+│   ├── release.yml                      # Release playbook with health check and automatic rollback
 │   └── site.yml                         # Base provisioning playbook
 ├── Project documentation/               # Weekly deliverables (Weeks 1-15) & architecture
 ├── src/
@@ -325,6 +327,15 @@ property-inspection-workflow/
 ├── run-app.ps1                          # App runner background script
 └── pom.xml                              # Maven project descriptor & dependencies
 ```
+
+---
+
+## Known Limitations
+
+- **API-Level Authorization**: Role-based access control and persona separation are enforced at the client interface layer; backend REST endpoints currently do not enforce centralized token/session interceptors or Spring Security guards (e.g., endpoints can be invoked directly without active authentication tokens).
+- **Deployment Strategy**: Container deployment via Ansible (`release.yml`) performs in-place container replacement with automated health checking and rollback rather than zero-downtime blue/green traffic routing across parallel environments.
+- **Audit Trail Persistence**: The audit trail records status transitions and user actions as an append-only JSON structure in the database; records are not cryptographically signed or backed by an immutable ledger.
+- **In-Memory Storage**: The application utilizes an embedded H2 database for demonstration and automated testing convenience, meaning state resets when the application process is stopped.
 
 ---
 
